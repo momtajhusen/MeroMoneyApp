@@ -17,8 +17,6 @@ const UpdateTransaction = ({ route }) => {
 
   console.log(data);
 
-
-
   const navigation = useNavigation();
   const { state, dispatch } = useContext(AppContext);
 

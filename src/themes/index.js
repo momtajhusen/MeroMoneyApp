@@ -1,4 +1,4 @@
-export const lightTheme = {
+export const Light = {
   primary: '#FFFFFF',
   secondary: '#F2F2F2',
   tertiary: '#CFCFCF',
@@ -18,7 +18,7 @@ export const lightTheme = {
 }
 
 
-export const darkTheme = {
+export const Dark = {
   primary: '#0D1017',
   secondary: '#161B21',
   tertiary: '#495461',
@@ -37,7 +37,7 @@ export const darkTheme = {
   shadowOpacity: 0.5,
 }
 
-export const midnightBlueDarkTheme = {
+export const BlueDark = {
   primary: '#0D1F2D',        // Deep midnight blue
   secondary: '#102A43',      // Slightly lighter blue
   tertiary: '#243B53',       // Medium blue for accents
@@ -56,7 +56,7 @@ export const midnightBlueDarkTheme = {
   shadowOpacity: 0.4,
 }
 
-export const emeraldGreenDarkTheme = {
+export const GreenDark = {
   primary: '#002B27',        // Deep teal background
   secondary: '#003F3C',      // Darker shade of teal
   tertiary: '#00796B',       // Emerald green for accents

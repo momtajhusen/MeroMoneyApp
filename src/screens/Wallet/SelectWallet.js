@@ -4,15 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import WalletList from '../../components/common/WalletList';
 import apiClient from '../../../apiClient';
 import { AppContext } from '../../context/AppContext';
-import { lightTheme, darkTheme } from '../../themes'; 
+import  { useTheme } from '../../themes/ThemeContext';
+
 
 
 const SelectWallet = () => {
   const navigation = useNavigation();
   const { state, dispatch } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; 
-
-
+  const { theme } = useTheme(); 
+ 
   // Base URL for your API or CDN
   const BASE_URL = 'https://finance.scriptqube.com/storage/';
 
@@ -38,7 +38,7 @@ const SelectWallet = () => {
   };
 
   return (
-    <View className="p-4 flex-1" style={{backgroundColor:themeColor.primary}}>
+    <View className="p-4 flex-1" style={{backgroundColor:theme.primary}}>
       {/* Wallet List Items */}
       <View className="flex-1">
         {walletData.length > 0 ? (
@@ -54,7 +54,7 @@ const SelectWallet = () => {
           ))
         ) : (
           <View className="flex-1 justify-center items-center p-4">
-             <Text style={{ color: themeColor.text }}>No wallet data available.</Text>
+             <Text style={{ color: theme.text }}>No wallet data available.</Text>
           </View>
         )}
       </View>

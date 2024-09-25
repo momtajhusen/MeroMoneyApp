@@ -5,7 +5,8 @@ import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../context/AppContext';
 import apiClient from '../../../apiClient'; // Import your API client
-import { lightTheme, darkTheme } from '../../themes'; 
+import  { useTheme } from '../../themes/ThemeContext';
+
 
 
 // Create a component
@@ -13,10 +14,7 @@ const AddWallets = () => {
   const navigation = useNavigation();
   const { state } = useContext(AppContext);
 
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme;
-
-  console.log(themeColor);
-
+  const { theme } = useTheme();
 
   const [walletName, setWalletName] = useState('');
   const [currencyCode, setCurrencyCode] = useState('Select Currency');
@@ -89,9 +87,9 @@ const AddWallets = () => {
             />
           </TouchableRipple>
           <TextInput
-            style={[styles.input, {backgroundColor:themeColor.secondary, color:themeColor.text}]}
+            style={[styles.input, {backgroundColor:theme.secondary, color:theme.text}]}
             placeholder="Wallet Name"
-            placeholderTextColor={themeColor.text} 
+            placeholderTextColor={theme.text} 
             value={walletName}
             onChangeText={(value) => setWalletName(value)}
           />
@@ -109,7 +107,7 @@ const AddWallets = () => {
               name="currency-exchange" 
               size={22} 
             />
-            <Text className="ml-5" style={{color:themeColor.text}}>{currencyCode}</Text>
+            <Text className="ml-5" style={{color:theme.text}}>{currencyCode}</Text>
           </View>
         </TouchableRipple>
 

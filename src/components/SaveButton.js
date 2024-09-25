@@ -2,26 +2,28 @@ import React,{useContext} from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { AppContext } from '../context/AppContext';
-import { lightTheme, darkTheme } from '../themes'; 
+import  { useTheme } from '../themes/ThemeContext';
+
 
 const SaveButton = ({ onPress, loading, disabled }) => {
 
   const { state, dispatch } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; 
+  const { theme } = useTheme();
+
 
   return (
     <TouchableRipple
       className="my-5"
       onPress={!loading && !disabled ? onPress : null}
       rippleColor="rgba(0, 0, 0, .32)"
-      style={[styles.saveButton, disabled && styles.disabledButton, {backgroundColor:themeColor.secondary}]}
+      style={[styles.saveButton, disabled && styles.disabledButton, {backgroundColor:theme.secondary}]}
       disabled={disabled}
     >
       <View style={styles.buttonContent}>
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={[styles.saveButtonText, {color:themeColor.text}]}>Save</Text>
+          <Text style={[styles.saveButtonText, {color:theme.text}]}>Save</Text>
         )}
       </View>
     </TouchableRipple>

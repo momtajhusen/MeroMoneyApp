@@ -2,12 +2,15 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import apiClient from '../../../apiClient'; // Adjust the import path as necessary
+import { useTheme } from '../../themes/ThemeContext';
 
 // Define the Signup component
 const Signup = ({ navigation }) => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const { theme } = useTheme();
 
     // Function to handle form submission
     const handleSignup = async () => {

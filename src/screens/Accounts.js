@@ -5,16 +5,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ListItems from '../components/common/List';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../context/AppContext';
-import { lightTheme, darkTheme } from '../themes'; 
-
-
+import { useTheme } from '../themes/ThemeContext';
 
 // Create the Account component
 const Account = () => {
    const navigation = useNavigation();
 
    const { state, dispatch } = useContext(AppContext);
-   const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; 
+   const { theme } = useTheme();
+
+   console.log(useTheme);
 
    // Logout function with confirmation alert
    const handleLogout = () => {
@@ -69,18 +69,18 @@ const Account = () => {
     }, [navigation]);
 
    return (
-      <View className="p-4 flex-1" style={{backgroundColor:themeColor.primary}}>
-         <View className="p-5 mb-5 items-center space-y-2" style={{borderWidth:1, borderColor:themeColor.border, borderRadius:8}}>
+      <View className="p-4 flex-1" style={{backgroundColor: theme.primary}}>
+         <View className="p-5 mb-5 items-center space-y-2" style={{borderWidth:1, borderColor:theme.border, borderRadius:8}}>
                <Image 
                   source={{ uri: "https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-color-icon.png" }}
                   style={{ width: 50, height: 50 }} 
                   resizeMode="contain"
                />
                <View className="items-center">
-                  <Text className="font-bold" style={{color:themeColor.text, fontSize:20}}>{state.userName}</Text>
-                  <Text className="font-bold" style={{color:themeColor.text}}>{state.userEmail}</Text>
+                  <Text className="font-bold" style={{color:theme.text, fontSize:20}}>{state.userName}</Text>
+                  <Text className="font-bold" style={{color:theme.text}}>{state.userEmail}</Text>
                   { state.userRole === 'developer' && (
-                    <Text className="font-bold" style={{color:themeColor.text}}>Role : {state.userRole}</Text>
+                    <Text className="font-bold" style={{color:theme.text}}>Role : {state.userRole}</Text>
                   )}
                </View>
 
@@ -95,6 +95,11 @@ const Account = () => {
             icon="category" 
             title="Category" 
             onPress={() => navigation.navigate('Categories')}
+         />
+         <ListItems 
+            icon="palette" 
+            title="Theme" 
+            onPress={() => navigation.navigate('ThemsSelect')}
          />
         {state.userRole === 'developer' && (
             <ListItems

@@ -4,17 +4,19 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { AppContext } from '../../context/AppContext';
-import { lightTheme, darkTheme } from '../../themes';
+import  { useTheme } from '../../themes/ThemeContext';
+
 
 const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressDelete, onPressEdit }) => {
   const { state } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme;
+  const { theme } = useTheme();
+
 
   return (
     <TouchableRipple
       onPress={onPress}
       rippleColor="rgba(0, 0, 0, .32)"
-      style={{ backgroundColor: themeColor.secondary, borderRadius: 8 }}
+      style={{ backgroundColor: theme.secondary, borderRadius: 8 }}
     >
       <View style={styles.container}>
         <View style={styles.content}>
@@ -23,8 +25,8 @@ const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressDele
             style={styles.image} 
           />
           <View>
-            <Text style={{ color: themeColor.text }}>{title}</Text>
-            <Text style={{ color: themeColor.text }}>{balance}</Text>
+            <Text style={{ color: theme.text }}>{title}</Text>
+            <Text style={{ color: theme.text }}>{balance}</Text>
           </View>
         </View>
 
@@ -33,17 +35,17 @@ const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressDele
             <Menu>
               <MenuTrigger>
                 <MaterialIcons 
-                  color={themeColor.text}
+                  color={theme.text}
                   name="more-vert" 
                   size={22} 
                 />
               </MenuTrigger>
-              <MenuOptions style={{ backgroundColor: themeColor.primary }}>
+              <MenuOptions style={{ backgroundColor: theme.primary }}>
                 <MenuOption onSelect={onPressEdit} style={{ padding: 10 }}>
-                  <Text style={{ color: themeColor.text }}>Update</Text>
+                  <Text style={{ color: theme.text }}>Update</Text>
                 </MenuOption>
                 <MenuOption onSelect={onPressDelete} style={{ padding: 10 }}>
-                  <Text style={{ color: themeColor.text }}>Delete</Text>
+                  <Text style={{ color: theme.text }}>Delete</Text>
                 </MenuOption>
               </MenuOptions>
             </Menu>

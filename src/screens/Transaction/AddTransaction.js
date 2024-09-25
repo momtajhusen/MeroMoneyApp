@@ -10,14 +10,13 @@ import NoteSelector from '../../components/NoteSelector';
 import DatePicker from '../../components/DatePicker';
 import WalletSelector from '../../components/WalletSelector';
 import SaveButton from '../../components/SaveButton';
-import { lightTheme, darkTheme } from '../../themes'; 
+import  { useTheme } from '../../themes/ThemeContext';
 
 
 const AddTransaction = () => {
   const navigation = useNavigation();
   const { state, dispatch } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; 
-
+  const { theme } = useTheme();
 
   const [transactionAmount, setTransactionAmount] = useState(null);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -103,7 +102,7 @@ const AddTransaction = () => {
   }, []);
 
   return (
-    <View style={[styles.container, {backgroundColor:themeColor.primary}]}>
+    <View style={[styles.container, {backgroundColor:theme.primary}]}>
       <CustomInput
         value={transactionAmount}
         onChangeText={setTransactionAmount}

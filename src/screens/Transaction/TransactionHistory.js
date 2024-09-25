@@ -4,12 +4,12 @@ import { AppContext } from '../../context/AppContext';
 import { useNavigation } from '@react-navigation/native';
 import apiClient from '../../../apiClient';
 import { TouchableRipple } from 'react-native-paper';
-import { lightTheme, darkTheme } from '../../themes';
+import  { useTheme } from '../../themes/ThemeContext';
 
 const TransactionHistory = () => {
     const navigation = useNavigation();
     const { state } = useContext(AppContext);
-    const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme;
+    const { theme } = useTheme();
     const BASE_URL = 'https://finance.scriptqube.com/storage/';
 
     const [transactionData, setTransactionData] = useState([]);
@@ -54,7 +54,7 @@ const TransactionHistory = () => {
             <TouchableRipple
                 onPress={() => handleItemClick(item)}
                 rippleColor="rgba(0, 0, 0, .32)"
-                style={{ backgroundColor: themeColor.secondary }}
+                style={{ backgroundColor: theme.secondary }}
                 key={item.id}
                 className="mb-0.5 py-1"
             >
@@ -67,13 +67,13 @@ const TransactionHistory = () => {
                             </View>
                         </View>
                         <View className="pl-3 space-y-2">
-                            <Text className="font-bold" style={{ color: themeColor.text }}>{item.transaction_category_name}</Text>
-                            <Text style={{ color: themeColor.subtext }}>{truncatedNote}</Text>
+                            <Text className="font-bold" style={{ color: theme.text }}>{item.transaction_category_name}</Text>
+                            <Text style={{ color: theme.subtext }}>{truncatedNote}</Text>
                         </View>
                     </View>
                     <View>
                         <Text style={[styles.amount, { color: amountTextColor }]}>{item.amount}</Text>
-                        <Text style={{ color: themeColor.subtext }}>{formattedDate}</Text>
+                        <Text style={{ color: theme.subtext }}>{formattedDate}</Text>
                     </View>
                 </View>
             </TouchableRipple>
@@ -81,7 +81,7 @@ const TransactionHistory = () => {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: themeColor.primary }]}>
+        <View style={[styles.container, { backgroundColor: theme.primary }]}>
             {transactionData.length > 0 ? (
                 <FlatList
                     data={transactionData}
@@ -97,7 +97,7 @@ const TransactionHistory = () => {
                 />
             ) : (
                 <View style={styles.centeredView}>
-                    <Text style={{ color: themeColor.text }}>No transaction data available.</Text>
+                    <Text style={{ color: theme.text }}>No transaction data available.</Text>
                 </View>
             )}
         </View>

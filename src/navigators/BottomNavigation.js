@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // Simple Bottom Tab Navigator
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import Dashboard from '../screens/DashboardScreen';
 import Wallet from '../screens/Wallet/MyWalletScreen';
@@ -7,33 +7,42 @@ import TransactionHistory from '../screens/Transaction/TransactionHistory';
 import AddTransaction from '../screens/Transaction/AddTransaction';
 import Budgets from '../screens/Budgets/budgets';
 import Account from '../screens/Accounts';
-import { lightTheme, darkTheme } from '../themes';  // Themes for color customization
+import  { useTheme } from '../themes/ThemeContext';
 import { AppContext } from '../context/AppContext';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
-const Tab = createBottomTabNavigator();  // Using simple Bottom Tab Navigator
+const Tab = createBottomTabNavigator();
 
-// Create a custom tab icon component
+// Custom tab icon component
 const CustomTabIcon = ({ name, focused, color, type = 'MaterialCommunityIcons' }) => {
   const IconComponent = type === 'MaterialIcons' ? MaterialIcons : MaterialCommunityIcons;
-  return (
-    <IconComponent
-      name={name}
-      color={color}
-      size={30}
-    />
-  );
+  return <IconComponent name={name} color={color} size={30} />;
 };
 
-const BottomNavigator = () => {
+// Function to control the visibility of the tab bar
+const getTabBarVisibility = (route) => {
+  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Home';
+  // Hide the tab bar if the current screen is 'Account'
+  if (routeName === 'Account') {
+    return false;
+  }
+  return true;
+};
+
+const BottomNavigator = ({ route }) => {
   const { state } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme;  // Switch themes
+  const { theme } = useTheme();
+
+
+  // Get visibility status based on the current focused route
+  const isTabBarVisible = getTabBarVisibility(route);
 
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ focused, color }) => {
           let iconName;
-          let iconType = 'MaterialCommunityIcons';  // Default icon type
+          let iconType = 'MaterialCommunityIcons';
 
           if (route.name === 'Home') {
             iconName = focused ? 'view-dashboard' : 'view-dashboard-outline';
@@ -49,16 +58,16 @@ const BottomNavigator = () => {
 
           return <CustomTabIcon name={iconName} focused={focused} color={color} type={iconType} />;
         },
-        tabBarActiveTintColor: themeColor.accent,  // Active tab icon/text color
-        tabBarInactiveTintColor: themeColor.text,  // Inactive tab icon/text color
-        tabBarStyle: { 
-          backgroundColor: themeColor.primary, 
-          height: 80, 
-          paddingTop: 10, 
-          borderTopWidth: 0,  // Remove the top border
-          borderWidth: 0 
+        tabBarActiveTintColor: theme.accent,
+        tabBarInactiveTintColor: theme.text,
+        tabBarStyle: {
+          display: isTabBarVisible ? 'flex' : 'none', // Conditionally hide/show tab bar
+          backgroundColor: theme.primary,
+          height: 80,
+          paddingTop: 10,
+          borderTopWidth: 0,
         },
-        tabBarLabelStyle: { fontSize: 12, paddingBottom: 20, fontWeight: 'bold' }, // Custom label styles
+        tabBarLabelStyle: { fontSize: 12, paddingBottom: 20, fontWeight: 'bold' },
         headerShown: false,
       })}
     >
@@ -67,7 +76,7 @@ const BottomNavigator = () => {
         component={Dashboard} 
         options={{
           title: 'Dash', 
-          tabBarLabel: 'Dash',  // Custom label for bottom tab
+          tabBarLabel: 'Dash',
         }} 
       />
       <Tab.Screen 
@@ -100,7 +109,7 @@ const BottomNavigator = () => {
         options={{
           title: 'Profile', 
           tabBarLabel: 'Profile',
-        }} 
+        }}
       />
     </Tab.Navigator>
   );

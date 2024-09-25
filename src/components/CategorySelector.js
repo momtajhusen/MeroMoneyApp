@@ -2,22 +2,20 @@
 import React,{useContext} from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { AppContext } from '../context/AppContext';
-import { lightTheme, darkTheme } from '../themes'; 
-
+import  { useTheme } from '../themes/ThemeContext';
 
 const CategorySelector = ({ onPress, categoryImage, categoryName }) => {
 
   const { state, dispatch } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; 
-
+  const { theme } = useTheme();
 
   return (
-    <TouchableOpacity className="mb-0.5" onPress={onPress} style={[styles.container, {backgroundColor:themeColor.secondary}]}>
+    <TouchableOpacity className="mb-0.5" onPress={onPress} style={[styles.container, {backgroundColor:theme.secondary}]}>
         <Image
           source={state.categoryImage ? { uri: state.categoryImage } : require('../../assets/default-icon.png')}
           style={styles.image}
         />
-      <Text style={[styles.text, {color:themeColor.text}]}>{categoryName || 'Select Category'}</Text>
+      <Text style={[styles.text, {color:theme.text}]}>{categoryName || 'Select Category'}</Text>
     </TouchableOpacity>
   );
 };

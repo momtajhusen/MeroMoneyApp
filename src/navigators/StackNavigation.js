@@ -21,22 +21,24 @@ import ParentIncomeCategory from '../screens/Category/selectParentIncomeCategory
 import Note from '../screens/Transaction/Note';
 import ViewTransaction from '../screens/Transaction/ViewTransaction';
 import UpdateTransaction from '../screens/Transaction/UpdateTransaction';
-import { lightTheme, darkTheme } from '../themes';
+import  { useTheme } from '../themes/ThemeContext';
 import { AppContext } from '../context/AppContext';
 import EditWallet from '../screens/Wallet/EditWallet';
+import Settings from '../screens/SettingsScreen';
+import ThemsSelect from '../themes/themsSelect';
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigation = () => {
   const { state } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; // Switch themes
+  const { theme } = useTheme();
 
   return (
     <Stack.Navigator
       screenOptions={{
-        headerStyle: { backgroundColor: themeColor.primary }, // Apply background color to all headers
-        headerTitleStyle: { color: themeColor.text }, // Apply text color to all headers
-        headerTintColor: themeColor.text, // Set the back button and icon color
+        headerStyle: { backgroundColor: theme.primary }, // Apply background color to all headers
+        headerTitleStyle: { color: theme.text }, // Apply text color to all headers
+        headerTintColor: theme.text, // Set the back button and icon color
       }}
     >
       <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }} />
@@ -61,6 +63,10 @@ const StackNavigation = () => {
       <Stack.Screen name="Note" component={Note} options={{ title: 'Note' }} />
       <Stack.Screen name="ViewTransaction" component={ViewTransaction} options={{ title: 'View Transaction' }} />
       <Stack.Screen name="UpdateTransaction" component={UpdateTransaction} options={{ title: 'Update Transaction' }} />
+      <Stack.Screen name="Settings" component={Settings} options={{ title: 'Update Transaction' }} />
+      <Stack.Screen name="ThemsSelect" component={ThemsSelect} options={{ title: 'Thems' }} />
+
+
     </Stack.Navigator>
   );
 };

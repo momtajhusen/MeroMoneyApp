@@ -5,15 +5,18 @@ import WalletList from '../../components/common/WalletList';
 import { MaterialIcons } from '@expo/vector-icons';
 import apiClient from '../../../apiClient';
 import { AppContext } from '../../context/AppContext';
-import { lightTheme, darkTheme } from '../../themes'; 
+import  { useTheme } from '../../themes/ThemeContext';
+
 
 const Wallet = () => {
   const navigation = useNavigation();
   const { state, dispatch } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme;
 
   const BASE_URL = 'https://finance.scriptqube.com/storage/';
   const [walletData, setWalletData] = useState([]);
+
+  const { theme } = useTheme();
+
 
   const fetchWalletData = async () => {
     try {
@@ -82,7 +85,7 @@ const Wallet = () => {
   }, []);
 
   return (
-    <View style={[styles.container, { padding: 8, backgroundColor: themeColor.primary }]}>
+    <View style={[styles.container, { padding: 8, backgroundColor: theme.primary }]}>
       <View className="flex-1">
         {walletData.length > 0 ? (
           walletData.map((wallet) => (
@@ -99,7 +102,7 @@ const Wallet = () => {
           ))
         ) : (
           <View className="flex-1 justify-center items-center p-4">
-             <Text style={{ color: themeColor.text }}>No wallet data available.</Text>
+             <Text style={{ color: theme.text }}>No wallet data available.</Text>
           </View>
         )}
       </View>
@@ -107,13 +110,13 @@ const Wallet = () => {
       <View style={styles.iconContainer}>
         <TouchableHighlight
           onPress={() => { navigation.navigate('AddWallets') }}
-          style={{ borderRadius: 100, borderWidth: 1, borderColor: themeColor.accent, padding: 8 }}
+          style={{ borderRadius: 100, borderWidth: 1, borderColor: theme.accent, padding: 8 }}
           underlayColor="rgba(0,0,0,0.1)"
         >
           <MaterialIcons
             name="add"
             size={30}
-            color={themeColor.accent}
+            color={theme.accent}
           />
         </TouchableHighlight>
       </View>

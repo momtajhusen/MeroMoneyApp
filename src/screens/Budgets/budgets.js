@@ -2,17 +2,18 @@
 import React,{useContext} from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { AppContext } from '../../context/AppContext';
-import { lightTheme, darkTheme } from '../../themes'; 
+import  { useTheme } from '../../themes/ThemeContext'
 
 // create a component
 const Budgets = () => {
 
     const { state, dispatch } = useContext(AppContext);
-    const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; 
+    const { theme } = useTheme();
+
 
     return (
-        <View className="p-4 flex-1" style={{backgroundColor:themeColor.primary}}>
-            <Text style={{color:themeColor.text}}>Budgets</Text>
+        <View className="p-4 flex-1" style={{backgroundColor:theme.primary}}>
+            <Text style={{color:theme.text}}>Budgets</Text>
         </View>
     );
 };

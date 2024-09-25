@@ -5,11 +5,16 @@ import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../context/AppContext';
 import apiClient from '../../../apiClient'; // Import your API client
+import  { useTheme } from '../../themes/ThemeContext';
+
 
 // Create a component
 const EditWallet = () => {
   const navigation = useNavigation();
   const { state } = useContext(AppContext);
+``
+  const { theme } = useTheme();
+
 
   const [walletName, setWalletName] = useState('');
   const [currencyCode, setCurrencyCode] = useState('Select Currency');

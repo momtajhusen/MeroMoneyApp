@@ -1,6 +1,6 @@
 const initialState = {
   theme: {
-    themeMode: 'dark',
+    themeMode: 'darkTheme',
     themeSwitch: true,
   },
 

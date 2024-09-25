@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, FlatList } from
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import apiClient from '../../../apiClient';
 import { AppContext } from '../../context/AppContext';
-import { lightTheme, darkTheme } from '../../themes'; 
+import  { useTheme } from '../../themes/ThemeContext';
 
 
 
@@ -12,7 +12,7 @@ const ExpenseCategory = () => {
 
   const navigation = useNavigation();
   const { state, dispatch } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; 
+  const { theme } = useTheme();
 
 
   // Base URL for your API or CDN
@@ -56,14 +56,14 @@ const ExpenseCategory = () => {
             onPress={() => categoryPress(subcategory.id, subcategory.name, BASE_URL+subcategory.icon_path )}
             // style={styles.itemStyle}
             className="p-2 ml-4 flex-row"
-            style={{backgroundColor:themeColor.secondary}}
+            style={{backgroundColor:theme.secondary}}
 
           >
             <Image 
               source={{ uri: BASE_URL + subcategory.icon_path }}
               style={styles.iconStyle} 
             />
-            <Text style={{color:themeColor.text}}>{subcategory.name}</Text>
+            <Text style={{color:theme.text}}>{subcategory.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -77,13 +77,13 @@ const ExpenseCategory = () => {
       <TouchableOpacity 
             onPress={() => categoryPress(parentCategory.id, parentCategory.name, BASE_URL+parentCategory.icon_path)}
         className="p-2 flex-row"
-        style={{backgroundColor:themeColor.secondary}}
+        style={{backgroundColor:theme.secondary}}
       >
         <Image 
           source={{ uri: BASE_URL + parentCategory.icon_path }}
           style={styles.iconStyle} 
         />
-        <Text style={{color:themeColor.text}}>{parentCategory.name}</Text>
+        <Text style={{color:theme.text}}>{parentCategory.name}</Text>
       </TouchableOpacity>
       {renderSubcategories({ item: parentCategory })}
     </View>
@@ -100,14 +100,14 @@ const ExpenseCategory = () => {
   const parentCategories = categories.filter(category => category.parent_id === null && category.type === "Expense" );
 
   return (
-    <View className="p-4 flex-1" style={{backgroundColor:themeColor.primary}}>
+    <View className="p-4 flex-1" style={{backgroundColor:theme.primary}}>
       {/* Button to navigate to 'NewCategory' screen */}
       <TouchableOpacity 
         onPress={() => navigation.navigate('NewCategory', { categoryType: 'Expense' })}
-        style={{backgroundColor:themeColor.secondary, borderWidth:1, borderColor:themeColor.border}}
+        style={{backgroundColor:theme.secondary, borderWidth:1, borderColor:theme.border}}
         className="p-3 mb-3"
       >
-        <Text className="text-center" style={{color:themeColor.text}}>Add New Category</Text>
+        <Text className="text-center" style={{color:theme.text}}>Add New Category</Text>
       </TouchableOpacity>
 
       {/* FlatList Section */}
@@ -115,7 +115,7 @@ const ExpenseCategory = () => {
         data={parentCategories}
         renderItem={renderCategories}
         keyExtractor={(item) => item.id.toString()}
-        ListEmptyComponent={<Text className="text-center" style={{color:themeColor.text}}>No categories available</Text>}
+        ListEmptyComponent={<Text className="text-center" style={{color:theme.text}}>No categories available</Text>}
       />
     </View>
   );

@@ -5,28 +5,28 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import ExpenseCategory from '../screens/Category/expenseCategory';
 import IncomeCategory from '../screens/Category/IncomeCategory';
 import { AppContext } from '../context/AppContext';
-import { lightTheme, darkTheme } from '../themes'; 
+import  { useTheme } from '../themes/ThemeContext';
 
 const Tab = createMaterialTopTabNavigator();
 
 const SelectCategoryTabNavigation = () => {
 
     const { state } = useContext(AppContext);
-    const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme;
-
+    const { theme } = useTheme();
+    
     return (
-        <View style={{ flex: 1, backgroundColor: themeColor.primary, padding: 0, margin: 0 }}>
+        <View style={{ flex: 1, backgroundColor: theme.primary, padding: 0, margin: 0 }}>
             <Tab.Navigator
                 initialRouteName="EXPENSE" 
                 backBehavior="initialRoute" 
                 tabBarPosition="top" 
-                sceneContainerStyle={{ backgroundColor: themeColor.primary }} 
+                sceneContainerStyle={{ backgroundColor: theme.primary }} 
                 screenOptions={{
                     tabBarStyle: { 
-                        backgroundColor: themeColor.primary, 
+                        backgroundColor: theme.primary, 
                     }, 
                     tabBarIndicatorStyle: { 
-                        backgroundColor: themeColor.accent, 
+                        backgroundColor: theme.accent, 
                         height: 4 
                     },  
                     tabBarLabelStyle: { 
@@ -34,9 +34,9 @@ const SelectCategoryTabNavigation = () => {
                         fontWeight: 'bold', 
                         textTransform: 'uppercase', 
                     },  
-                    tabBarActiveTintColor: themeColor.accent, // Active tab label color
-                    tabBarInactiveTintColor: themeColor.text, // Inactive tab label color
-                    tabBarPressColor: themeColor.secondary, // Ripple effect color on press (Android)
+                    tabBarActiveTintColor: theme.accent, // Active tab label color
+                    tabBarInactiveTintColor: theme.text, // Inactive tab label color
+                    tabBarPressColor: theme.secondary, // Ripple effect color on press (Android)
                     tabBarShowLabel: true, // Show label on the tab
                     tabBarScrollEnabled: false, // Whether the tab bar is scrollable
                     tabBarItemStyle: { width: 'auto' }, // Individual tab item style

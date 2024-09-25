@@ -5,8 +5,8 @@ import { View, Text, StyleSheet } from 'react-native';
 // create a component
 const Budget = () => {
     return (
-        <View>
-            <Text>Budget</Text>
+        <View className="flex-1">
+            <Text>Budgets</Text>
         </View>
     );
 };

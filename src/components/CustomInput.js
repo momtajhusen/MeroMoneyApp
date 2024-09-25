@@ -2,22 +2,24 @@
 import React, {useContext} from 'react';
 import { TextInput, StyleSheet, View } from 'react-native';
 import { AppContext } from '../context/AppContext';
-import { lightTheme, darkTheme } from '../themes'; 
+import  { useTheme } from '../themes/ThemeContext';
+
 
 const CustomInput = ({ placeholder, value, onChangeText, keyboardType = 'default' }) => {
 
   const { state, dispatch } = useContext(AppContext);
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme; 
+  const { theme } = useTheme();
+
 
   return (
-    <View className="mb-0.5" style={[styles.inputContainer, {backgroundColor:themeColor.secondary}]}>
+    <View className="mb-0.5" style={[styles.inputContainer, {backgroundColor:theme.secondary}]}>
       <TextInput
-        style={[styles.input, {color:themeColor.text}]}
+        style={[styles.input, {color:theme.text}]}
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
-        placeholderTextColor={themeColor.text} 
+        placeholderTextColor={theme.text} 
       />
     </View>
   );

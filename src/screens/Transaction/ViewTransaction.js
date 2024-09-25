@@ -6,15 +6,16 @@ import CategorySelector from '../../components/CategorySelector';
 import NoteSelector from '../../components/NoteSelector';
 import WalletSelector from '../../components/WalletSelector';
 import apiClient from '../../../apiClient';
-import { lightTheme, darkTheme } from '../../themes'; 
+import  { useTheme } from '../../themes/ThemeContext';
+
 
 const ViewTransaction = ({ route }) => {
   const navigation = useNavigation();
   const { data } = route.params;
 
   const { state, dispatch } = useContext(AppContext);
+  const { theme } = useTheme();
 
-  const themeColor = state.theme.themeMode === 'dark' ? darkTheme : lightTheme;  // Switch themes
 
   const amountTextColor = data.transaction_type === 'Expense' ? '#b02305' : data.transaction_type === 'Income' ? '#169709' : 'black';
 
@@ -51,9 +52,9 @@ const ViewTransaction = ({ route }) => {
   };
 
   return (
-    <View className="p-4 flex-1" style={{backgroundColor:themeColor.primary}}>
-      <View className="p-4 mb-1" style={{backgroundColor:themeColor.secondary}}>
-        <Text style={{color:themeColor.text}}>Amount</Text>
+    <View className="p-4 flex-1" style={{backgroundColor:theme.primary}}>
+      <View className="p-4 mb-1" style={{backgroundColor:theme.secondary}}>
+        <Text style={{color:theme.text}}>Amount</Text>
         <Text className="font-bold" style={{ fontSize: 25, color: amountTextColor }}>
           {data.amount}
         </Text>
@@ -68,30 +69,30 @@ const ViewTransaction = ({ route }) => {
 
       <NoteSelector note={data.note} />
 
-      <View className="px-5 py-2" style={{backgroundColor:themeColor.secondary}}>
-        <Text style={{color:themeColor.text}}>Date</Text>
-        <Text className="font-bold" style={{color:themeColor.text}}>{formattedDate}</Text>
+      <View className="px-5 py-2" style={{backgroundColor:theme.secondary}}>
+        <Text style={{color:theme.text}}>Date</Text>
+        <Text className="font-bold" style={{color:theme.text}}>{formattedDate}</Text>
       </View>
 
-      <View className="px-5 pb-2" style={{backgroundColor:themeColor.secondary}}>
-        <Text style={{color:themeColor.text}}>Time</Text>
-        <Text className="font-bold" style={{color:themeColor.text}}>{formattedTime}</Text>
+      <View className="px-5 pb-2" style={{backgroundColor:theme.secondary}}>
+        <Text style={{color:theme.text}}>Time</Text>
+        <Text className="font-bold" style={{color:theme.text}}>{formattedTime}</Text>
       </View>
 
       <View className="flex-row space-x-6 mt-8">
         <TouchableOpacity
           className="p-3 flex-1"
           onPress={() => deleteTransactionData(data.id)}
-          style={{backgroundColor:themeColor.secondary}}
+          style={{backgroundColor:theme.secondary}}
         >
-          <Text className="font-bold text-center" style={{color:themeColor.text}}>Delete</Text>
+          <Text className="font-bold text-center" style={{color:theme.text}}>Delete</Text>
         </TouchableOpacity>
         <TouchableOpacity 
           className="p-3 flex-1"
           onPress={() => navigation.navigate('UpdateTransaction', { data })}
-          style={{backgroundColor:themeColor.secondary}}
+          style={{backgroundColor:theme.secondary}}
           >
-          <Text className="font-bold text-center" style={{color:themeColor.text}}>Update</Text>
+          <Text className="font-bold text-center" style={{color:theme.text}}>Update</Text>
         </TouchableOpacity>
       </View>
     </View>
