@@ -5,10 +5,14 @@ import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../context/AppContext';
 import apiClient from '../../../apiClient'; // Make sure this is properly set up
+import  { useTheme } from '../../themes/ThemeContext';
+
 
 const NewCategory = ({ route }) => {
   const navigation = useNavigation();
   const { state, dispatch } = useContext(AppContext);
+
+  const { theme } = useTheme();
 
   const { categoryType } = route.params;
 
@@ -52,10 +56,9 @@ const NewCategory = ({ route }) => {
   
 
   return (
-    <View style={{ padding: 10 }}>
-      <View style={styles.card}>
+      <View  className="p-5 flex-1" style={{backgroundColor:theme.primary}}>
         {/* Category Name Input */}
-        <View style={styles.row}>
+        <View className="p-2" style={[styles.row, {backgroundColor:theme.secondary}]}>
           <TouchableOpacity 
             onPress={() => { navigation.navigate('SelectItonsTabs'); }} 
           >
@@ -66,8 +69,9 @@ const NewCategory = ({ route }) => {
           </TouchableOpacity>
 
           <TextInput
-            style={styles.input}
+            style={[styles.input, {color:theme.text}]}
             placeholder="Category Name"
+            placeholderTextColor={theme.text}
             value={categoryName}
             onChangeText={(value) => setCategoryName(value)}
           />
@@ -75,7 +79,8 @@ const NewCategory = ({ route }) => {
 
         <TouchableRipple
           rippleColor="rgba(0, 0, 0, .32)"
-          style={styles.touchableRipple}
+          style={[styles.touchableRipple, {backgroundColor:theme.secondary}]}
+          className="p-3 mb-5"
         >
           <View style={styles.touchableContent}>
           <Image
@@ -85,7 +90,7 @@ const NewCategory = ({ route }) => {
             
             <View className="ml-5" style={{width:'85%'}}>
               <View className="flex-row justify-between">
-                 <Text style={{ fontWeight: 'bold' }}>{categoryType ?? 'Type'}</Text>
+                 <Text style={{ fontWeight: 'bold', color:theme.text }}>{categoryType ?? 'Type'}</Text>
               </View>
             </View>
           </View>
@@ -101,19 +106,19 @@ const NewCategory = ({ route }) => {
               }
             }}
           rippleColor="rgba(0, 0, 0, .32)"
-          style={styles.touchableRipple}
+          style={[styles.touchableRipple, , {backgroundColor:theme.secondary}]}
         >
-          <View style={styles.touchableContent}>
+          <View className="p-2" style={[styles.touchableContent]}>
             <MaterialIcons
-              color="black"
+              color={theme.text}
               name="category"
               size={22}
             />
             
             <View className="ml-5" style={{ width: '85%' }}>
-              <Text>Parent category</Text>
+              <Text style={{color:theme.text}}>Parent category</Text>
               <View className="flex-row justify-between">
-                <Text style={{ fontWeight: 'bold' }}>{state.categoryName ?? 'Select Category'}</Text>
+                <Text style={{ fontWeight: 'bold', color:theme.text }}>{state.categoryName ?? 'Select Category'}</Text>
                 
                 {/* Cancel icon should only show when categoryId is not null */}
                 {state.categoryId !== null && (
@@ -122,7 +127,7 @@ const NewCategory = ({ route }) => {
                       dispatch({ type: 'SET_CATEGORY', payload: { categoryId: null, categoryName: null } })
                     }
                   >
-                    <MaterialIcons color="black" name="cancel" size={22} />
+                    <MaterialIcons color={theme.text} name="cancel" size={22} />
                   </TouchableOpacity>
                 )}
               </View>
@@ -142,7 +147,6 @@ const NewCategory = ({ route }) => {
           </View>
         </TouchableRipple>
       </View>
-    </View>
   );
 };
 
@@ -168,6 +172,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 10, // Adds space between the image and text
+    borderRadius:5,
   },
   input: {
     flex: 1,

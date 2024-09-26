@@ -9,6 +9,7 @@ const CategorySelector = ({ onPress, categoryImage, categoryName }) => {
   const { state, dispatch } = useContext(AppContext);
   const { theme } = useTheme();
 
+
   return (
     <TouchableOpacity className="mb-0.5" onPress={onPress} style={[styles.container, {backgroundColor:theme.secondary}]}>
         <Image

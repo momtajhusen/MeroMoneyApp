@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../context/AppContext';
-import apiClient from '../../../apiClient'; // Import your API client
+import apiClient from '../../../apiClient';
 import  { useTheme } from '../../themes/ThemeContext';
 
 
@@ -74,11 +74,10 @@ const AddWallets = () => {
   };
   
   return (
-    <View style={{ padding: 10 }}>
-      <View style={styles.card}>
+      <View className="p-8 flex-1" style={{backgroundColor:theme.primary}}>
 
         {/* Wallet Name Input */}
-        <View style={styles.row}>
+        <View className="p-2" style={[styles.row, {backgroundColor:theme.secondary} ]}>
           <TouchableRipple onPress={() => navigation.navigate('SelectItonsTabs')}>
             <Image 
               source={{ uri: selectIconImage }}
@@ -87,7 +86,7 @@ const AddWallets = () => {
             />
           </TouchableRipple>
           <TextInput
-            style={[styles.input, {backgroundColor:theme.secondary, color:theme.text}]}
+            style={[styles.input, {color:theme.text}]}
             placeholder="Wallet Name"
             placeholderTextColor={theme.text} 
             value={walletName}
@@ -99,11 +98,12 @@ const AddWallets = () => {
         <TouchableRipple 
           onPress={() => {navigation.navigate('Currency')}} 
           rippleColor="rgba(0, 0, 0, .32)" 
-          style={styles.touchableRipple}
+          style={[styles.touchableRipple, {backgroundColor:theme.secondary}]}
+          className="mb-4"
         >
-          <View style={styles.touchableContent}>
+          <View className="px-2" style={[styles.touchableContent]}>
             <MaterialIcons 
-              color="black" 
+              color={theme.text} 
               name="currency-exchange" 
               size={22} 
             />
@@ -112,10 +112,11 @@ const AddWallets = () => {
         </TouchableRipple>
 
         {/* Initial Balance Input */}
-        <View style={styles.balanceContainer}>
+        <View className="px-2 mb-8" style={[styles.balanceContainer, {backgroundColor:theme.secondary}]}>
           <TextInput
-            style={styles.balanceInput}
+            style={[styles.balanceInput, {color:theme.text}]}
             placeholder="Initial Balance"
+            placeholderTextColor={theme.text} 
             value={balance}
             onChangeText={(value) => setBalance(value)}
             keyboardType="numeric"
@@ -132,7 +133,6 @@ const AddWallets = () => {
           </View>
         </TouchableRipple>
       </View>
-    </View>
   );
 };
 

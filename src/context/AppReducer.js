@@ -58,6 +58,11 @@ export default (state, action) => {
         categoryImage: action.payload.categoryImage,
 
       };
+      case 'SET_CATEGORY_SELECT_TYPE':
+        return {
+          ...state,
+          categorySelectType: action.payload
+        };
       case 'SET_CATEGORY_NAVIGATION':
         return {
           ...state,

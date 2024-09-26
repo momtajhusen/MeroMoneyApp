@@ -17,6 +17,7 @@ const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressDele
       onPress={onPress}
       rippleColor="rgba(0, 0, 0, .32)"
       style={{ backgroundColor: theme.secondary, borderRadius: 8 }}
+      className="mb-1"
     >
       <View style={styles.container}>
         <View style={styles.content}>
@@ -71,6 +72,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginRight: 10,
+    borderRadius:5
   },
 });
 

@@ -22,6 +22,8 @@ const initialState = {
   categoryImage: null,
 
   categoryBackNavigation: null,
+  categorySelectType: null,
+
 
   // Wallet-related state
   walletId: null,

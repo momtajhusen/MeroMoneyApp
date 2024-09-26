@@ -33,6 +33,7 @@ const IncomeCategory = () => {
     const categoryPress = (categoryId, categoryName, categoryImage) => {
       // Dispatch both categoryId and categoryName in a single action
       dispatch({ type: 'SET_CATEGORY', payload: { categoryId, categoryName, categoryImage}});
+      dispatch({ type: 'SET_CATEGORY_SELECT_TYPE', payload:  'Income' });
 
       // If categoryBackNavigation exists, navigate to the respective screen
       if (state.categoryBackNavigation != null) {
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     marginRight: 10,
+    borderRadius:5,
   },
   accordionStyle: {
     backgroundColor: '#fff',

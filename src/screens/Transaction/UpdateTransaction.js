@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { AppContext } from '../../context/AppContext';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import apiClient from '../../../apiClient';
@@ -10,23 +10,43 @@ import NoteSelector from '../../components/NoteSelector';
 import DatePicker from '../../components/DatePicker';
 import WalletSelector from '../../components/WalletSelector';
 import SaveButton from '../../components/SaveButton';
+import { useTheme } from '../../themes/ThemeContext';
 
 const UpdateTransaction = ({ route }) => {
-
   const { data } = route.params;
 
-  console.log(data);
+  const BASE_URL = 'https://finance.scriptqube.com/storage/';
 
+
+  // Convert transactionDate to a JavaScript Date object
+  const transactionDate = new Date(data.transaction_date);
+ 
+  const categoryId = data.category_id;
+  const categoryName = data.transaction_category_name;
+  const categoryImage = `${BASE_URL}${data.categories_icon}`;
+  const note = data.note;
+
+  const walletId = data.wallet_id;
+  const walletName = data.wallets_name;
+  const walletIcon = data.wallets_icon;
+
+  const { theme } = useTheme();
   const navigation = useNavigation();
   const { state, dispatch } = useContext(AppContext);
 
   const [transactionAmount, setTransactionAmount] = useState(data.amount);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-
+  const [selectedDate, setSelectedDate] = useState(transactionDate || new Date());
   const [isLoading, setIsLoading] = useState(false);
 
   const textInputRef = useRef(null);
+
+  useEffect(() => {
+    dispatch({ type: 'SET_CATEGORY', payload: { categoryId, categoryName, categoryImage } });
+    dispatch({ type: 'TRANSCTION_NOTE', payload: note });
+    dispatch({ type: 'SET_WALLET', payload: { walletId, walletName } });
+  }, []);
+  
 
   const CategorySelect = () => {
     dispatch({ type: 'SET_CATEGORY_NAVIGATION', payload: 'AddTransactions' });
@@ -38,35 +58,33 @@ const UpdateTransaction = ({ route }) => {
     setDatePickerVisibility(false);
   };
 
-  const TransactionSave = async () => {
+  const TransactionUpdate = async () => {
     const user_id = state.userId;
     const wallet_id = state.walletId;
     const category_id = state.categoryId;
     const amount = transactionAmount;
     const note = state.transactionNote;
-    const transaction_date = selectedDate;
+    const transaction_date = data.transaction_date;
   
-    // Sequential validation
+    // Sequential Validation
     if (!user_id) {
       Alert.alert('Validation Error', 'User ID is required.');
       return;
     }
-
+  
     if (!amount || isNaN(amount)) {
       Alert.alert('Validation Error', 'Please enter a valid amount.');
       return;
     }
-
+  
     if (!category_id) {
       Alert.alert('Validation Error', 'Please select a category.');
       return;
     }
-  
     if (!wallet_id) {
       Alert.alert('Validation Error', 'Please select a wallet.');
       return;
     }
-
   
     // Prepare the payload after validation
     const payload = {
@@ -80,16 +98,28 @@ const UpdateTransaction = ({ route }) => {
       exchange_rate_to_base: null,
     };
   
+    console.log(payload);
+  
     try {
       setIsLoading(true); // Start loading
-      const response = await apiClient.post('/transactions', payload);
-      if (response.status === 201) {
-        Alert.alert('Success', 'Transaction saved successfully.');
+      const response = await apiClient.put(`/transactions/${data.id}`, payload); // Assuming PUT request for update
+      console.log(response);
+  
+      if (response.status === 200) {
+        Alert.alert('Success', 'Transaction updated successfully.');
+  
+        // Clear the state using dispatch
+        dispatch({ type: 'SET_CATEGORY', payload: { categoryId: null, categoryName: null, categoryImage: null } });
+        dispatch({ type: 'TRANSCTION_NOTE', payload: null });
+        dispatch({ type: 'SET_WALLET', payload: { walletId: null, walletName: null } });
+  
+        // Navigate back to the 'Transactions' screen
         navigation.navigate('Transactions');
       } else {
-        Alert.alert('Error', 'Failed to save the transaction.');
+        Alert.alert('Error', 'Failed to update the transaction.');
       }
     } catch (error) {
+      console.log(error.response);
       Alert.alert('Message', error.response?.data?.error || error.message);
     } finally {
       setIsLoading(false); // Stop loading
@@ -103,8 +133,15 @@ const UpdateTransaction = ({ route }) => {
     }
   }, []);
 
+  useFocusEffect(
+    useCallback(() => {
+      // Execute logic when screen comes into focus
+      // Fetch the latest data if required
+    }, [])
+  );
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.primary }]}>
       <InputField
         value={transactionAmount}
         onChangeText={setTransactionAmount}
@@ -142,8 +179,8 @@ const UpdateTransaction = ({ route }) => {
         onCancel={() => setDatePickerVisibility(false)}
       />
 
-      <SaveButton 
-        onPress={TransactionSave} 
+      <SaveButton
+        onPress={TransactionUpdate}
         loading={isLoading}
       />
     </View>

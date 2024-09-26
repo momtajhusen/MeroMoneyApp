@@ -5,10 +5,15 @@ import apiClient from '../../../apiClient';
 import { List } from 'react-native-paper';
 import { AppContext } from '../../context/AppContext';
 import { useNavigation } from '@react-navigation/native';
+import  { useTheme } from '../../themes/ThemeContext';
+
 
 // create a component
 const ParentExpenseCategory = () => {
   const navigation = useNavigation();
+
+  const { theme } = useTheme();
+
 
   // Base URL for your API or CDN
   const BASE_URL = 'https://finance.scriptqube.com/storage/';
@@ -40,7 +45,7 @@ const ParentExpenseCategory = () => {
   const filteredCategories = category.filter(cat => cat.type === "Expense" && cat.parent_id === null);
 
   return (
-    <View className="p-4">
+    <View className="p-4 flex-1" style={{backgroundColor:theme.primary}}>
       {filteredCategories.map((category) => (
         <TouchableOpacity 
           key={category.id}  
@@ -48,12 +53,14 @@ const ParentExpenseCategory = () => {
           onPress={() => CategoryClick(category.id, category.name)}
         >
           <List.Item
-            className="p-0"
+            className="p-1"
             title={category.name}
+            titleStyle={{color:theme.text}}
+            style={{backgroundColor:theme.secondary, color:theme.text}}
             left={() => (
               <Image 
                 source={{ uri: `${BASE_URL}${category.icon_path}` }} 
-                style={{ width: 40, height: 40 }} 
+                style={{ width: 35, height: 35, borderRadius:5 }} 
               />
             )}
           />

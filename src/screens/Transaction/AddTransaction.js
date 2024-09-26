@@ -83,6 +83,10 @@ const AddTransaction = () => {
       const response = await apiClient.post('/transactions', payload);
       if (response.status === 201) {
         Alert.alert('Success', 'Transaction saved successfully.');
+        // Clear the state using dispatch
+        dispatch({ type: 'SET_CATEGORY', payload: { categoryId: null, categoryName: null, categoryImage: null } });
+        dispatch({ type: 'TRANSCTION_NOTE', payload: null });
+        dispatch({ type: 'SET_WALLET', payload: { walletId: null, walletName: null } });
         navigation.navigate('Transactions');
       } else {
         Alert.alert('Error', 'Failed to save the transaction.');
@@ -93,6 +97,7 @@ const AddTransaction = () => {
       setIsLoading(false); // Stop loading
     }
   };
+
   
 
   useEffect(() => {

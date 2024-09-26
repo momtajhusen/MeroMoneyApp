@@ -1,4 +1,4 @@
-import React,{useContext} from 'react';
+import React,{useContext, useEffect} from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../context/AppContext';
@@ -12,6 +12,8 @@ import  { useTheme } from '../../themes/ThemeContext';
 const ViewTransaction = ({ route }) => {
   const navigation = useNavigation();
   const { data } = route.params;
+
+  console.log(data.categories_icon);
 
   const { state, dispatch } = useContext(AppContext);
   const { theme } = useTheme();
@@ -51,6 +53,11 @@ const ViewTransaction = ({ route }) => {
     }
   };
 
+  useEffect(() => {
+    dispatch({ type: 'SET_CATEGORY', payload: {categoryId: data.category_id, categoryName:data.transaction_category_name, categoryImage:`${BASE_URL}${data.categories_icon}` } });
+    dispatch({ type: 'SET_CATEGORY_SELECT_TYPE', payload:  data.type });
+  }, []);
+
   return (
     <View className="p-4 flex-1" style={{backgroundColor:theme.primary}}>
       <View className="p-4 mb-1" style={{backgroundColor:theme.secondary}}>
@@ -61,11 +68,11 @@ const ViewTransaction = ({ route }) => {
       </View>
 
       <CategorySelector
-        categoryImage={`${BASE_URL}${data.categories_icon}`}
+        categoryImage={state.categoryIcon}
         categoryName={data.transaction_category_name}
       />
 
-      <WalletSelector walletName={data.wallet_id} />
+      <WalletSelector walletName={data.wallets_name} />
 
       <NoteSelector note={data.note} />
 
