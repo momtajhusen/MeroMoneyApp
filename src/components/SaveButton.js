@@ -5,7 +5,7 @@ import { AppContext } from '../context/AppContext';
 import  { useTheme } from '../themes/ThemeContext';
 
 
-const SaveButton = ({ onPress, loading, disabled }) => {
+const SaveButton = ({ onPress, loading, disabled, title="save" }) => {
 
   const { state, dispatch } = useContext(AppContext);
   const { theme } = useTheme();
@@ -23,7 +23,7 @@ const SaveButton = ({ onPress, loading, disabled }) => {
         {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
-          <Text style={[styles.saveButtonText, {color:theme.text}]}>Save</Text>
+          <Text style={[styles.saveButtonText, {color:theme.text}]}>{title}</Text>
         )}
       </View>
     </TouchableRipple>

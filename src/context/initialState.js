@@ -1,3 +1,5 @@
+import { all } from "axios";
+
 const initialState = {
   theme: {
     themeMode: 'darkTheme',
@@ -15,7 +17,6 @@ const initialState = {
   userEmail: null,
   userName: null,
 
-
   // Category-related state
   categoryId: null,
   categoryName: null,
@@ -24,13 +25,22 @@ const initialState = {
   categoryBackNavigation: null,
   categorySelectType: null,
 
-
   // Wallet-related state
   walletId: null,
   walletName: null,
 
   // Note
   transactionNote: null,
+
+  transactionFilter: {
+    amountFilterType: 'All', // Options: All, Over, Under, Between, Exact
+    amount: { min: null, max: null, exact: null },
+    walletFilterType: 'All', // Options: All, Over, Under, Between, Exact
+    wallet: { min: null, max: null, exact: null },
+    note: '', // The note input filter
+    categoryFilter: 'Income', // Options: All Categories, All Income, All Expenses
+  },
+
 };
 
 export default initialState;

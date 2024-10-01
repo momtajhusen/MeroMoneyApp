@@ -1,105 +1,94 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, Alert, RefreshControl } from 'react-native';
-import { AppContext } from '../../context/AppContext';
-import { useNavigation } from '@react-navigation/native';
-import apiClient from '../../../apiClient';
-import { TouchableRipple } from 'react-native-paper';
-import  { useTheme } from '../../themes/ThemeContext';
+// TransactionHistory.js
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from '../../themes/ThemeContext';
+import CustomBottomSheet from '../../components/common/BottomSheetComponent';
+import TransactionHistoryTransactions from './TranstionHistoryTransactions';
+import TranstionHistoryCategories from './TranstionHistoryCategories';
 
 const TransactionHistory = () => {
-    const navigation = useNavigation();
-    const { state } = useContext(AppContext);
     const { theme } = useTheme();
-    const BASE_URL = 'https://finance.scriptqube.com/storage/';
+    const [isSheetVisible, setSheetVisible] = useState(false);
+    const [activeTab, setActiveTab] = useState('Transaction');
 
-    const [transactionData, setTransactionData] = useState([]);
-    const [isRefreshing, setIsRefreshing] = useState(false);
-
-    const fetchTransactionData = async () => {
+    // Function to get data from AsyncStorage
+    const getStoredTab = async () => {
         try {
-            const response = await apiClient.get('/transactions');
-            setTransactionData(response.data);
+            const storedTab = await AsyncStorage.getItem('activeTab');
+            if (storedTab) {
+                setActiveTab(storedTab);
+            }
         } catch (error) {
-            console.error('Error fetching data:', error.response ? error.response.data : error.message);
-        } finally {
-            setIsRefreshing(false);
+            console.error("Error reading value from AsyncStorage: ", error);
         }
     };
 
+    // Retrieve the stored tab on initial load
     useEffect(() => {
-        fetchTransactionData();
+        getStoredTab();
     }, []);
 
-    const onRefresh = () => {
-        setIsRefreshing(true);
-        fetchTransactionData();
-    };
+    const openSheet = () => setSheetVisible(true);
+    const closeSheet = () => setSheetVisible(false);
 
-    const handleItemClick = (transaction) => {
-        navigation.navigate('ViewTransaction', { data: transaction });
-    };
-
-    const renderItem = ({ item }) => {
-        const note = item.note ? item.note : '';
-        const truncatedNote = note.length > 20 ? note.substring(0, 20) + ' ...' : note;
-        const amountTextColor = item.transaction_type === 'Expense' ? '#b02305' : item.transaction_type === 'Income' ? '#169709' : 'black';
-        const date = new Date(item.transaction_date);
-        const options = { day: '2-digit', month: 'short', year: 'numeric' };
-        const formattedDate = date.toLocaleDateString('en-IN', options);
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const formattedTime = `${hours % 12 || 12}:${minutes < 10 ? '0' + minutes : minutes} ${hours >= 12 ? 'PM' : 'AM'}`;
-
-        return (
-            <TouchableRipple
-                onPress={() => handleItemClick(item)}
-                rippleColor="rgba(0, 0, 0, .32)"
-                style={{ backgroundColor: theme.secondary }}
-                key={item.id}
-                className="mb-0.5 py-1"
-            >
-                <View style={styles.itemContent}>
-                    <View style={styles.itemLeft}>
-                        <View style={styles.iconContainer}>
-                            <Image source={{ uri: `${BASE_URL}${item.categories_icon}` }} style={styles.categoryIcon} />
-                            <View style={styles.walletIconContainer}>
-                                <Image source={{ uri: `${BASE_URL}${item.wallets_icon}` }} style={styles.walletIcon} />
-                            </View>
-                        </View>
-                        <View className="pl-3 space-y-2">
-                            <Text className="font-bold" style={{ color: theme.text }}>{item.transaction_category_name}</Text>
-                            <Text style={{ color: theme.subtext }}>{truncatedNote}</Text>
-                        </View>
-                    </View>
-                    <View>
-                        <Text style={[styles.amount, { color: amountTextColor }]}>{item.amount}</Text>
-                        <Text style={{ color: theme.subtext }}>{formattedDate}</Text>
-                    </View>
-                </View>
-            </TouchableRipple>
-        );
+    // Function to handle tab change and store the selected tab in AsyncStorage
+    const handleTabChange = async (tabName) => {
+        try {
+            setActiveTab(tabName);
+            await AsyncStorage.setItem('activeTab', tabName);
+        } catch (error) {
+            console.error("Error saving tab in AsyncStorage: ", error);
+        }
     };
 
     return (
         <View style={[styles.container, { backgroundColor: theme.primary }]}>
-            {transactionData.length > 0 ? (
-                <FlatList
-                    data={transactionData}
-                    renderItem={renderItem}
-                    keyExtractor={(item) => item.id.toString()}
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={isRefreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
-                    className="mx-3 mt-2"
-                />
-            ) : (
-                <View style={styles.centeredView}>
-                    <Text style={{ color: theme.text }}>No transaction data available.</Text>
+            {/* Button to open the bottom sheet */}
+            <View className="flex-row justify-between p-2 px-3 mx-3" style={{ backgroundColor: theme.secondary, borderRadius: 10 }}>
+                <View className="flex-row items-center space-x-2">
+                    <TouchableOpacity
+                        onPress={() => handleTabChange('Transaction')}
+                        className="p-2 px-4"
+                        style={{
+                            backgroundColor: activeTab === 'Transaction' ? theme.secondary : theme.primary,
+                            borderRadius: 5,
+                            borderWidth: 1,
+                            borderColor: activeTab === 'Transaction' ? theme.border : theme.primary,
+                        }}
+                    >
+                        <Text style={{ color: theme.text, fontWeight: activeTab === 'Transaction' ? 'bold' : 'normal' }}>Transaction</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => handleTabChange('Categories')}
+                        className="p-2 px-4"
+                        style={{
+                            backgroundColor: activeTab === 'Categories' ? theme.secondary : theme.primary,
+                            borderRadius: 5,
+                            borderWidth: 1,
+                            borderColor: activeTab === 'Categories' ? theme.border : theme.primary,
+                        }}
+                    >
+                        <Text style={{ color: theme.text, fontWeight: activeTab === 'Categories' ? 'bold' : 'normal' }}>Categories</Text>
+                    </TouchableOpacity>
                 </View>
-            )}
+                <View className="flex-row space-x-4 items-center">
+                    <TouchableOpacity className="p-2" style={{ backgroundColor: theme.primary, borderRadius: 10 }}>
+                        <MaterialIcons color={theme.text} name="search" size={22} />
+                    </TouchableOpacity>
+                    <TouchableOpacity className="p-2" onPress={openSheet} style={{ backgroundColor: theme.primary, borderRadius: 10 }}>
+                        <MaterialIcons color={theme.text} name="filter-list" size={22} />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            {/* Render the selected tab content */}
+            {activeTab === 'Transaction' ? <TransactionHistoryTransactions /> : <TranstionHistoryCategories />}
+
+            {/* Custom bottom sheet */}
+            <CustomBottomSheet visible={isSheetVisible} onClose={closeSheet} />
         </View>
     );
 };
@@ -108,46 +97,6 @@ const TransactionHistory = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 16,
-    },
-    itemContent: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        padding: 8,
-    },
-    itemLeft: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    iconContainer: {
-        position: 'relative',
-        marginRight: 8,
-    },
-    categoryIcon: {
-        width: 35,
-        height: 35,
-    },
-    walletIconContainer: {
-        position: 'absolute',
-        bottom: -5,
-        right: -5,
-        borderRadius: 6,
-        backgroundColor: 'white',
-        padding: 2,
-    },
-    walletIcon: {
-        width: 12,
-        height: 12,
-    },
-    amount: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        textAlign: 'right',
     },
 });
 
