@@ -4,7 +4,7 @@ const SET_THEME_SWITCH = 'SET_THEME_SWITCH';
 
 const SET_AMOUNT_FILTER = 'SET_AMOUNT_FILTER';
 const SET_WALLET_FILTER = 'SET_WALLET_FILTER';
-const SET_CATEGORY_FILTER = 'SET_CATEGORY_FILTER';
+const SET_TRANSACTION_TYPE_FILTER = 'SET_TRANSACTION_TYPE_FILTER';
 const SET_NOTE_FILTER = 'SET_NOTE_FILTER';
 
 const SET_USER = 'SET_USER';
@@ -56,6 +56,7 @@ export default (state, action) => {
           amount: action.payload.amount,
         },
       };
+      
     case SET_WALLET_FILTER:
       return {
         ...state,
@@ -65,12 +66,13 @@ export default (state, action) => {
           wallet: action.payload.wallet,
         },
       };
-    case SET_CATEGORY_FILTER:
+
+    case SET_TRANSACTION_TYPE_FILTER: 
       return {
         ...state,
         transactionFilter: {
           ...state.transactionFilter,
-          categoryFilter: action.payload,
+          transactionType: action.payload,
         },
       };
     case SET_NOTE_FILTER:

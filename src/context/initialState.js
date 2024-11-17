@@ -56,7 +56,6 @@ const initialState = {
     walletFilterType: 'All', // Filter for wallet type
     transactionType: 'All', // Filter for transaction type: 'Income', 'Expense', 'All'
     note: '', // Filter for note content
-    categoryFilter: null, // Added missing property
     wallet: null, // Added missing property
   },
 
