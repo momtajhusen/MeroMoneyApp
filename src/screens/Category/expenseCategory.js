@@ -226,7 +226,6 @@ const ExpenseCategory = () => {
   </View>
 </Modal>
 
-
       <CustomAlert
         visible={isModalVisible}
         title="Confirm Delete"

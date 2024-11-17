@@ -108,7 +108,7 @@ const TransactionHistoryTransactions = () => {
                 (transactionFilter.amountFilterType === 'Exact' && parseFloat(item.amount) === parseFloat(transactionFilter.amount.exact))
             ) &&
             // Wallet filter
-            (transactionFilter.walletType === 'All' || item.wallets_name === transactionFilter.walletType) &&
+            (transactionFilter.walletFilterType === 'All' || item.wallets_name === transactionFilter.walletFilterType) &&
             // Transaction Type filter
             (transactionFilter.transactionType === 'All' || item.transaction_type === transactionFilter.transactionType) &&
             // Note filter
@@ -197,8 +197,11 @@ const TransactionHistoryTransactions = () => {
         } else if (filterType === 'wallet') {
             dispatch({
                 type: 'SET_WALLET_FILTER',
-                payload:  'All',
-              });
+                payload: {
+                  walletFilterType: 'All',
+                  wallet: null, // or an empty string or the default wallet object if you want
+                },
+              });              
         } else if (filterType === 'amount') {
             dispatch({
                 type: 'SET_AMOUNT_FILTER',
@@ -219,14 +222,14 @@ const TransactionHistoryTransactions = () => {
     return (
         <View className="flex-1 px-3">
             {/* Filter Title show */}
-            {(transactionFilter.walletType !== 'All' || transactionFilter.transactionType !== 'All' || transactionFilter.amountFilterType !== 'All' || transactionFilter.note) && (
+            {(transactionFilter.walletFilterType !== 'All' || transactionFilter.transactionType !== 'All' || transactionFilter.amountFilterType !== 'All' || transactionFilter.note) && (
                 <View className="p-1 px-3 mt-1 flex-row space-x-2 items-center" style={{ backgroundColor: theme.secondary }}>
                     <Text style={{ color: theme.text }}>Filters Applied:</Text>
                     <View className="flex-row space-x-1">
                         {/* Walets Filter */}
-                        {transactionFilter.walletType !== 'All' && (
+                        {transactionFilter.walletFilterType !== 'All' && (
                             <View className="p-2 px-2 flex-row space-x-2 items-center justify-center" style={{ backgroundColor: theme.primary, borderRadius: 10 }}>
-                                <Text style={{ color: theme.text }}>{transactionFilter.walletType}</Text>
+                                <Text style={{ color: theme.text }}>{transactionFilter.walletFilterType}</Text>
                                 <TouchableOpacity onPress={() => handleRemoveFilter('wallet')}>
                                     <MaterialIcons color={theme.text} name="cancel" size={15} />
                                 </TouchableOpacity>

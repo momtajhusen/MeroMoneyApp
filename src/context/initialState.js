@@ -36,9 +36,16 @@ const initialState = {
   transactionNote: null,
   transactionDate: null,
 
+   // Date Range related state
+  dateRangeApply: 'This Month',  // default to 'This Month'
+
   // Note
   transactionNote: null,
 
+  // Note
+  reFresh: false,
+
+  // Transaction Filter
   transactionFilter: {
     amountFilterType: 'All', // Filter type for amount: 'All', 'Over', 'Under', 'Between', 'Exact'
     amount: {
@@ -46,9 +53,11 @@ const initialState = {
       max: 0, // Maximum value for 'Under', 'Between' filters
       exact: 0, // Exact amount filter value for 'Exact'
     },
-    walletType: 'All', // Filter for wallet type
+    walletFilterType: 'All', // Filter for wallet type
     transactionType: 'All', // Filter for transaction type: 'Income', 'Expense', 'All'
     note: '', // Filter for note content
+    categoryFilter: null, // Added missing property
+    wallet: null, // Added missing property
   },
 
 };

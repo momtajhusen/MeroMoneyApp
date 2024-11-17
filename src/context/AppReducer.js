@@ -22,6 +22,11 @@ const SET_CATEGORY_NAVIGATION = 'SET_CATEGORY_NAVIGATION';
 const SET_WALLET = 'SET_WALLET';
 const TRANSCTION_DATA = 'TRANSCTION_DATA';
 const TRANSCTION_NOTE = 'TRANSCTION_NOTE';
+const SET_DATE_RANGE = 'SET_DATE_RANGE';
+const GLOBAL_REFRESH = 'GLOBAL_REFRESH';
+const SET_CATEGORY_ICON = 'SET_CATEGORY_ICON';
+
+
 
 // Reducer
 export default (state, action) => {
@@ -119,6 +124,19 @@ export default (state, action) => {
         selectCurrencyCode: action.payload,
       };
 
+      case GLOBAL_REFRESH:
+        return {
+          ...state,
+          reFresh: action.payload,
+        };
+
+    // Category Icon action
+    case SET_CATEGORY_ICON:
+      return {
+        ...state,
+        categoryIcon: action.payload, // Update the categoryIcon in the state
+      };
+
     // Category actions
     case SET_CATEGORY:
       return {
@@ -148,7 +166,6 @@ export default (state, action) => {
       };
 
     //  TRANSCTION action
-
       case TRANSCTION_DATA:
         return {
           ...state,
@@ -158,8 +175,12 @@ export default (state, action) => {
           transactionDate: action.payload.transactionDate,
         };
 
-
-        
+        case SET_DATE_RANGE:
+          return {
+            ...state,
+            dateRangeApply: action.payload,
+          };
+      
 
     // Transaction Note
     case TRANSCTION_NOTE:

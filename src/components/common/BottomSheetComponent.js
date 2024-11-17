@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
+ import React, { useRef, useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -254,11 +254,11 @@ const CustomBottomSheet = ({ visible, onClose }) => {
                   <TouchableOpacity
                     style={[
                       styles.filterButton,
-                      filterValues.walletFilterType === 'Over' && {backgroundColor:theme.accent, borderColor:theme.border},
+                      filterValues.walletFilterType === 'eSewa' && {backgroundColor:theme.accent, borderColor:theme.border},
                     ]}
-                    onPress={() => setFilterValues({ ...filterValues, walletFilterType: 'Over' })}
+                    onPress={() => setFilterValues({ ...filterValues, walletFilterType: 'eSewa' })}
                   >
-                    <Text style={styles.filterButtonText}>Over</Text>
+                    <Text style={styles.filterButtonText}>eSewa</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={[

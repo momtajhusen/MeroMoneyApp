@@ -34,11 +34,16 @@ const AllIcons = () => {
   const fetchIconData = async () => {
     try {
       const response = await apiClient.get('/icons');
-      setIcons(response.data);
+      
+      // Filter data to include only items where user_id matches state.userId
+      const filteredIcons = response.data.filter(icon => icon.user_id === state.userId);
+      
+      setIcons(filteredIcons);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+  
 
   useFocusEffect(
     useCallback(() => {
