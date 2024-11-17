@@ -30,7 +30,6 @@ const TopSpending = () => {
     }
   };
 
-
   const onRefresh = () => {
     setRefreshing(true);
     fetchTopSpendingTransactions().then(() => setRefreshing(false));
@@ -40,7 +39,7 @@ const TopSpending = () => {
     useFocusEffect(
       useCallback(() => {
         fetchTopSpendingTransactions();
-      }, [])
+      }, [state.reFresh])
     );
 
   const renderItem = ({ item }) => (

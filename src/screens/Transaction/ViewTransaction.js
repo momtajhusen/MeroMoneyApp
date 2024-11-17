@@ -42,7 +42,7 @@ const ViewTransaction = ({ route }) => {
         navigation.navigate('Transactions');
       }, 2000); // Adjust delay as needed
   
-      dispatch({ type: 'SET_REFRESH', payload: Math.random() });
+      dispatch({ type: 'GLOBAL_REFRESH', payload: Math.random() });
     } catch (error) {
       setAlertMessage(error.response?.data?.error || 'An error occurred while deleting the transaction.');
       setAlertType('error'); // Set the alert type

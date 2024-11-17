@@ -19,8 +19,8 @@ const Dashboard = () => {
   // Refresh function
   const onRefresh = async () => {
     setRefreshing(true);
-    // Dispatch the SET_REFRESH action with a random payload to toggle state
-    dispatch({ type: 'SET_REFRESH', payload: Math.random() });
+    // Dispatch the GLOBAL_REFRESH action with a random payload to toggle state
+    dispatch({ type: 'GLOBAL_REFRESH', payload: Math.random() });
 
     // Here you can perform actions to refresh your data (fetch new data, etc.)
     setRefreshing(false);

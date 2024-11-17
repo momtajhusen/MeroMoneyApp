@@ -97,6 +97,7 @@ const TransactionHistoryTransactions = () => {
       
 
     const applyFilters = (transactions) => {
+
         return transactions.filter(item =>
             // Amount filter
             (transactionFilter.amountFilterType === 'All' ||

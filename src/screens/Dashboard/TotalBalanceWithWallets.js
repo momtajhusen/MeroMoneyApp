@@ -26,8 +26,6 @@ const TotalBalanceWithWallets = () => {
       const wallets = response.data;
       setWalletData(wallets);
 
-      console.log(wallets);
-
       // Calculate the total balance without conversion
       const total = wallets.reduce((acc, wallet) => {
         const balance = parseFloat(wallet.balance); // Ensure balance is a number
@@ -42,7 +40,6 @@ const TotalBalanceWithWallets = () => {
     }
   };
 
-
   // Define onRefresh function
   const onRefresh = () => {
     fetchWalletData();
@@ -52,7 +49,7 @@ const TotalBalanceWithWallets = () => {
     useFocusEffect(
       useCallback(() => {
         fetchWalletData();
-      }, [])
+      }, [state.reFresh])
     );
 
   const renderItem = ({ item }) => {
