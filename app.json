@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "MeroMoney",
+    "slug": "meromoney",
+    "version": "1.0.0",  
+    "sdkVersion": "52.0.0",
+    "newArchEnabled": true,
+    "extra": {
+      "eas": {
+        "projectId": "35324044-397a-4841-8470-113e5737589f"
+      }
+    },
+    "owner": "scriptqubeofficial",
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "enabled": true,
+      "url": "https://u.expo.dev/35324044-397a-4841-8470-113e5737589f"
+    },
+    "android": {},
+    "ios": {}
+  }
+}
