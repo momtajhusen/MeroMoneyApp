@@ -94,6 +94,7 @@ const EnterNewPassword = () => {
                 color: theme.text,
               },
             ]}
+            className="flex-1"
             placeholder="New Password"
             value={newPassword}
             onChangeText={handleNewPasswordChange}
@@ -117,6 +118,7 @@ const EnterNewPassword = () => {
                 color: theme.text,
               },
             ]}
+            className="flex-1"
             placeholder="Confirm Password"
             value={confirmPassword}
             onChangeText={handleConfirmPasswordChange}
@@ -148,17 +150,18 @@ const styles = StyleSheet.create({
     height: rh(7), 
     borderWidth: 1, 
     borderRadius: 5, 
-    paddingHorizontal: rw(2),
+    paddingHorizontal: rw(4),
     fontWeight: 'bold', 
-    marginBottom: rh(2),
+    marginBottom: rh(0.5),
+    marginTop:rh(2),
   },
   passwordContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  eyeIcon: { position: 'absolute', right: rw(2) },
-  errorText: { color: 'red', fontSize: rf(1.2), marginTop: rh(0.5) },
+  eyeIcon: { position: 'absolute', top:rh(4.2), right: rw(4) },
+  errorText: { color: 'red', fontSize: rf(1.5) },
   logoContainer: { justifyContent: 'center', alignItems: 'center' },
   logo: { borderRadius: 10 },
 });

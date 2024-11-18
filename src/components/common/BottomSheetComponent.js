@@ -215,217 +215,197 @@ const CustomBottomSheet = ({ visible, onClose }) => {
       >
         <View style={styles.content}>
         <ScrollView style={styles.scrollView}>
-          <View style={styles.draggableIconContainer}>
-            <View
-              style={[
-                styles.draggableIcon,
-                { backgroundColor: theme.accent },
-              ]}
-            />
-          </View>
-          <View className="flex-1">
-            <Text style={[styles.sheetTitle, { color: theme.text }]}>
-              Filter Transaction
-            </Text>
-
-            <View className="flex-1">
-              <Text style={{ color: theme.text, fontWeight: 'bold', marginBottom: 5 }}>Amount</Text>
-              <Picker
-              selectedValue={filterValues.amountFilterType}
-              onValueChange={(value) => setFilterValues({ ...filterValues, amountFilterType: value })}
-              style={{
-                height: 50, // Adjust the height of the Picker
-                width: '100%', // Full width of the container
-                borderColor: theme.primary, // Set border color based on your theme
-                borderWidth: 1, // Set the border width
-                borderRadius: 8, // Optional, for rounded corners
-                backgroundColor: theme.secondary, // Background color of the Picker
-                paddingLeft: 10, // Add some padding inside
-              }}
-            >
-              <Picker.Item
-                label="All"
-                value="All"
-                style={{
-                  color: theme.text, // Text color
-                  backgroundColor: theme.secondary, // Background color for the selected item
-                }}
-              />
-              <Picker.Item
-                label="Over"
-                value="Over"
-                style={{
-                  color: theme.text,
-                  backgroundColor: theme.secondary,
-                }}
-              />
-              <Picker.Item
-                label="Under"
-                value="Under"
-                style={{
-                  color: theme.text,
-                  backgroundColor: theme.secondary,
-                }}
-              />
-              <Picker.Item
-                label="Between"
-                value="Between"
-                style={{
-                  color: theme.text,
-                  backgroundColor: theme.secondary,
-                }}
-              />
-              <Picker.Item
-                label="Exact"
-                value="Exact"
-                style={{
-                  color: theme.text,
-                  backgroundColor: theme.secondary,
-                }}
-              />
-            </Picker>
-
-
-              {/* Filters for specific amount values */}
-              {filterValues.amountFilterType === 'Over' && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                <TextInput
-                  style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
-                  placeholder="Amount Over"
-                  placeholderTextColor={theme.text}
-                  keyboardType="numeric"
-                  value={filterValues.amount.min}
-                  onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, min: value } })}
-                />
-                </View>
-              )}
-
-              {filterValues.amountFilterType === 'Under' && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                <TextInput
-                  style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
-                  placeholder="Amount Under"
-                  placeholderTextColor={theme.text}
-                  keyboardType="numeric"
-                  value={filterValues.amount.max}
-                  onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, max: value } })}
-                />
-                </View>
-              )}
-
-              {filterValues.amountFilterType === 'Exact' && (
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                <TextInput
-                  style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
-                  placeholder="Exact Amount"
-                  placeholderTextColor={theme.text}
-                  keyboardType="numeric"
-                  value={filterValues.amount.min}
-                  onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, min: value } })}
-                />
-                </View>
-              )}
-
-              {filterValues.amountFilterType === 'Between' && (
-                <View className="space-x-3" style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                  <TextInput
-                    style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
-                    placeholder="Min Amount"
-                    placeholderTextColor={theme.text}
-                    keyboardType="numeric"
-                    value={filterValues.amount.min}
-                    onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, min: value } })}
-                  />
-                  <TextInput
-                    style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
-                    placeholder="Max Amount"
-                    placeholderTextColor={theme.text}
-                    keyboardType="numeric"
-                    value={filterValues.amount.max}
-                    onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, max: value } })}
-                  />
-                </View>
-              )}
-
+          <View className="flex-1" style={{height:"100%"}}>
               <View>
-                {/* Wallet Filter */}
-                <Text style={{ color: theme.text, fontWeight: 'bold', marginTop: 10 }}>Wallet</Text>
-                <ScrollView horizontal={true} style={styles.scrollView}>
-                  <View className="space-x-4 ml-5" style={styles.filterButtonContainer}>
-                    {walletTypes.map((walletType, index) => (
-                      <TouchableOpacity
-                        key={index}
-                        style={[
-                          styles.filterButton,
-                          filterValues.walletFilterType === walletType && {
-                            backgroundColor: theme.accent,
-                            borderColor: theme.border,
-                          },
-                        ]}
-                        onPress={() => setFilterValues({ ...filterValues, walletFilterType: walletType })}
-                      >
-                        <Text style={styles.filterButtonText}>{walletType}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </ScrollView>
+                <View style={styles.draggableIconContainer}>
+                  <View
+                    style={[
+                      styles.draggableIcon,
+                      { backgroundColor: theme.accent },
+                    ]}
+                  />
+                </View>
+                <View className="flex-1">
+                  <Text style={[styles.sheetTitle, { color: theme.text }]}>
+                    Filter Transaction
+                  </Text>
 
-                {/* Category Filter */}
-                <Text style={{ color: theme.text, fontWeight: 'bold', marginTop: 10 }}>Transaction Type</Text>
-                <View style={styles.filterButtonContainer}>
-                  <TouchableOpacity
-                    style={[
-                      styles.filterButton,
-                      filterValues.transactionType === 'All' && {backgroundColor:theme.accent, borderColor:theme.border},
-                    ]}
-                    onPress={() => setFilterValues({ ...filterValues, transactionType: 'All' })}
-                  >
-                    <Text style={styles.filterButtonText}>All</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.filterButton,
-                      filterValues.transactionType === 'Income' && {backgroundColor:theme.accent, borderColor:theme.border},
-                    ]}
-                    onPress={() => setFilterValues({ ...filterValues, transactionType: 'Income' })}
-                  >
-                    <Text style={styles.filterButtonText}>Income</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[
-                      styles.filterButton,
-                      filterValues.transactionType === 'Expense' && {backgroundColor:theme.accent, borderColor:theme.border},
-                    ]}
-                    onPress={() => setFilterValues({ ...filterValues, transactionType: 'Expense' })}
-                  >
-                    <Text style={styles.filterButtonText}>Expense</Text>
-                  </TouchableOpacity>
+                  <View className="flex-1">
+ 
+                 <View className="flex-1">
+                    <Text style={{ color: theme.text, fontWeight: 'bold', marginBottom: 5 }}>Amount</Text>
+                    <View
+                      style={{
+                        height: 50,
+                        width: '100%',
+                        borderColor: theme.primary,
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        backgroundColor: theme.secondary,
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Picker
+                        selectedValue={filterValues.amountFilterType}
+                        onValueChange={(value) => setFilterValues({ ...filterValues, amountFilterType: value })}
+                        style={{ color: theme.text }}
+                        dropdownIconColor={theme.primary}
+                      >
+                        <Picker.Item label="All" value="All" />
+                        <Picker.Item label="Over" value="Over" />
+                        <Picker.Item label="Under" value="Under" />
+                        <Picker.Item label="Between" value="Between" />
+                        <Picker.Item label="Exact" value="Exact" />
+                      </Picker>
+                    </View>
+                  </View>
+
+                    {/* Filters for specific amount values */}
+                    {filterValues.amountFilterType === 'Over' && (
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                      <TextInput
+                        style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
+                        placeholder="Amount Over"
+                        placeholderTextColor={theme.text}
+                        keyboardType="numeric"
+                        value={filterValues.amount.min}
+                        onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, min: value } })}
+                      />
+                      </View>
+                    )}
+
+                    {filterValues.amountFilterType === 'Under' && (
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                      <TextInput
+                        style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
+                        placeholder="Amount Under"
+                        placeholderTextColor={theme.text}
+                        keyboardType="numeric"
+                        value={filterValues.amount.max}
+                        onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, max: value } })}
+                      />
+                      </View>
+                    )}
+
+                    {filterValues.amountFilterType === 'Exact' && (
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                      <TextInput
+                        style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
+                        placeholder="Exact Amount"
+                        placeholderTextColor={theme.text}
+                        keyboardType="numeric"
+                        value={filterValues.amount.min}
+                        onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, min: value } })}
+                      />
+                      </View>
+                    )}
+
+                    {filterValues.amountFilterType === 'Between' && (
+                      <View className="space-x-3" style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                        <TextInput
+                          style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
+                          placeholder="Min Amount"
+                          placeholderTextColor={theme.text}
+                          keyboardType="numeric"
+                          value={filterValues.amount.min}
+                          onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, min: value } })}
+                        />
+                        <TextInput
+                          style={[styles.input, { color: theme.text, borderColor: theme.accent }]}
+                          placeholder="Max Amount"
+                          placeholderTextColor={theme.text}
+                          keyboardType="numeric"
+                          value={filterValues.amount.max}
+                          onChangeText={(value) => setFilterValues({ ...filterValues, amount: { ...filterValues.amount, max: value } })}
+                        />
+                      </View>
+                    )}
+
+                    <View>
+                      {/* Wallet Filter */}
+                      <Text style={{ color: theme.text, fontWeight: 'bold', marginTop: 10 }}>Wallet</Text>
+                      <ScrollView horizontal={true} style={styles.scrollView}>
+                        <View className="space-x-4 ml-5" style={styles.filterButtonContainer}>
+                          {walletTypes.map((walletType, index) => (
+                            <TouchableOpacity
+                              key={index}
+                              style={[
+                                styles.filterButton,
+                                 {borderColor:theme.border},
+                                filterValues.walletFilterType === walletType && {
+                                  borderColor: theme.accent,
+                                },
+                              ]}
+                              onPress={() => setFilterValues({ ...filterValues, walletFilterType: walletType })}
+                            >
+                              <Text style={styles.filterButtonText}>{walletType}</Text>
+                            </TouchableOpacity>
+                          ))}
+                        </View>
+                      </ScrollView>
+
+                      {/* Category Filter */}
+                      <Text style={{ color: theme.text, fontWeight: 'bold', marginTop: 10 }}>Transaction Type</Text>
+                      <View style={styles.filterButtonContainer}>
+                        <TouchableOpacity
+                          style={[
+                            styles.filterButton,
+                            {borderColor:theme.border},
+                            filterValues.transactionType === 'All' && {borderColor:theme.accent},
+                          ]}
+                          onPress={() => setFilterValues({ ...filterValues, transactionType: 'All' })}
+                        >
+                          <Text style={styles.filterButtonText}>All</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[
+                            styles.filterButton,
+                            {borderColor:theme.border},
+                            filterValues.transactionType === 'Income' && {borderColor:theme.accent},
+                          ]}
+                          onPress={() => setFilterValues({ ...filterValues, transactionType: 'Income' })}
+                        >
+                          <Text style={styles.filterButtonText}>Income</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[
+                            styles.filterButton,
+                            {borderColor:theme.border},
+                            filterValues.transactionType === 'Expense' && {borderColor:theme.accent},
+                          ]}
+                          onPress={() => setFilterValues({ ...filterValues, transactionType: 'Expense' })}
+                        >
+                          <Text style={styles.filterButtonText}>Expense</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+
+
+                    <Text style={{ color: theme.text, fontWeight: 'bold', marginTop: 10 }}>Note</Text>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
+                        <TextInput
+                          style={[styles.input, {color:theme.text, borderColor:theme.border}]}
+                          placeholder="Enter note"
+                          placeholderTextColor={theme.text}
+                          value={filterValues.note}
+                          onChangeText={(text) => setFilterValues({ ...filterValues, note: text })}
+                        />
+                      </View>
+
+                  </View>
                 </View>
               </View>
 
-
-              <Text style={{ color: theme.text, fontWeight: 'bold', marginTop: 10 }}>Note</Text>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: 5 }}>
-                  <TextInput
-                    style={[styles.input, {color:theme.text, borderColor:theme.border}]}
-                    placeholder="Enter note"
-                    placeholderTextColor={theme.text}
-                    value={filterValues.note}
-                    onChangeText={(text) => setFilterValues({ ...filterValues, note: text })}
-                  />
-                </View>
-
-            </View>
+              <View className="flex-1" style={styles.buttonContainer}>
+                <TouchableOpacity onPress={clearFilters} style={styles.button}>
+                  <SaveButton title="Clear" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={applyFilters} style={styles.button}>
+                  <SaveButton title="Apply" />
+                </TouchableOpacity>
+              </View>
           </View>
 
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={clearFilters} style={styles.button}>
-              <SaveButton title="Clear" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={applyFilters} style={styles.button}>
-              <SaveButton title="Apply" />
-            </TouchableOpacity>
-          </View>
           </ScrollView>
         </View>
       </Animated.View>
@@ -488,7 +468,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   filterButton: {
-    borderColor: '#F0AD4E',
     borderWidth: 1,
     paddingVertical: 8,
     paddingHorizontal: 16,
