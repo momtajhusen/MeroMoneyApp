@@ -17,7 +17,6 @@ export const Light = {
   shadowOpacity: 0.1,
 }
 
-
 export const Dark = {
   primary: '#0D1017',
   secondary: '#161B21',
