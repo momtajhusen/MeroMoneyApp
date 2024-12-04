@@ -62,6 +62,7 @@ const Wallet = () => {
   const onPressEdit = (wallet) => {
     dispatch({ type: 'SET_ICON_ID', payload: wallet.icon_id });
     dispatch({ type: 'SET_ICON_IMAGE', payload: BASE_URL + wallet.icon_path });
+    dispatch({ type: 'SET_CURRENCY_CODE', payload: wallet.currency_code });
     navigation.navigate('EditWallet', { data: wallet });
   };
 

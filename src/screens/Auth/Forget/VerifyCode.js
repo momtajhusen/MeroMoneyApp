@@ -6,8 +6,7 @@ import { useTheme } from '../../../themes/ThemeContext';
 import SaveButton from '../../../components/SaveButton';
 import apiClient from '../../../../apiClient';
 import { rw, rh, rf } from '../../../themes/responsive';
-
-const { width, height } = Dimensions.get('window');
+ 
 
 const VerifyCode = ({ route }) => {
   const [code, setCode] = useState(['', '', '', '']);

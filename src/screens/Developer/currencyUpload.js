@@ -1,16 +1,43 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, Alert } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, Image, TextInput, StyleSheet, Alert,Animated } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import SelectDropdown from 'react-native-select-dropdown';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import apiClient from '../../../apiClient';
+import  { useTheme } from '../../themes/ThemeContext';
+import SaveButton from '../../components/SaveButton';
+import CustomAlert from '../../components/common/CustomAlert';
+
 
 const CurrencyUpload = () => {
   const [imageUri, setImageUri] = useState('https://static.vecteezy.com/system/resources/previews/005/544/744/original/flag-icon-design-free-vector.jpg');
   const [selectedCurrency, setSelectedCurrency] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ currencyName: '', currencyCode: '', image: '', currency: '' });
+
+  const { theme } = useTheme();
+
+    // Animated values for shaking
+    const iconShake = useRef(new Animated.Value(0)).current;
+    const currencySelect = useRef(new Animated.Value(0)).current;
+  
+    // Shake animation function
+    const shakeAnimation = (animatedValue) => {
+      Animated.sequence([
+        Animated.timing(animatedValue, { toValue: -10, duration: 100, useNativeDriver: true }),
+        Animated.timing(animatedValue, { toValue: 10, duration: 100, useNativeDriver: true }),
+        Animated.timing(animatedValue, { toValue: -5, duration: 100, useNativeDriver: true }),
+        Animated.timing(animatedValue, { toValue: 5, duration: 100, useNativeDriver: true }),
+        Animated.timing(animatedValue, { toValue: 0, duration: 100, useNativeDriver: true }),
+      ]).start();
+    };
+
+    // State for alert
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('');
+
 
   const currencies = [
     { currency_code: 'NPR', currency_name: 'Nepalese Rupee' },
@@ -46,12 +73,14 @@ const CurrencyUpload = () => {
     // Validate inputs
     let valid = true;
     if (imageUri === 'https://static.vecteezy.com/system/resources/previews/005/544/744/original/flag-icon-design-free-vector.jpg') {
-      setErrors(prev => ({ ...prev, image: 'Flag is required.' }));
+      shakeAnimation(iconShake);
       valid = false;
+      return false;
     }
     if (!selectedCurrency) {
-      setErrors(prev => ({ ...prev, currency: 'Currency is required.' }));
+      shakeAnimation(currencySelect);
       valid = false;
+      return false;
     }
 
     if (!valid) return;
@@ -81,7 +110,10 @@ const CurrencyUpload = () => {
       console.log(response.data);
 
       if (response.status === 201) {
-        Alert.alert('Success', 'Currency uploaded successfully!');
+        // Handle success response
+        setAlertMessage('Currency uploaded successfully!');
+        setAlertType('success');
+        setAlertVisible(true);
         setImageUri('https://static.vecteezy.com/system/resources/previews/005/544/744/original/flag-icon-design-free-vector.jpg');
         setSelectedCurrency(null);
       } else {
@@ -106,18 +138,18 @@ const CurrencyUpload = () => {
   };
 
   return (
-    <View style={{ padding: 10 }}>
-      <View style={styles.card}>
+    <View className="flex-1 px-5" style={{ padding: 10, backgroundColor:theme.primary}}>
+ 
         {/* Flag Image Upload */}
+ 
         <View style={styles.row}>
           <TouchableRipple onPress={pickImage}>
-            <Image 
+            <Animated.Image 
               source={{ uri: imageUri }}
-              style={styles.image} 
+              style={[styles.image, { transform: [{ translateX: iconShake }] }]} // Fix applied here
               resizeMode="contain"
             />
           </TouchableRipple>
-          {errors.image ? <Text style={styles.errorText}>{errors.image}</Text> : null}
         </View>
 
         {/* Currency Dropdown */}
@@ -127,40 +159,44 @@ const CurrencyUpload = () => {
             setSelectedCurrency(selectedItem);
           }}
           renderButton={(selectedItem, isOpened) => (
-            <View style={styles.dropdownButtonStyle}>
+            <Animated.View 
+              style={[
+                styles.dropdownButtonStyle, 
+                { backgroundColor: theme.secondary, transform: [{ translateX: currencySelect }] }
+              ]}
+            >
               {selectedItem && (
-                <Icon name="currency-usd" style={styles.dropdownButtonIconStyle} />
+                <Text style={{color:theme.text}}>({selectedItem.currency_code}) </Text>
               )}
-              <Text style={styles.dropdownButtonTxtStyle}>
+              <Text style={[styles.dropdownButtonTxtStyle, {color:theme.text}]}>
                 {(selectedItem && selectedItem.currency_name) || 'Select Currency'}
               </Text>
-              <Icon name={isOpened ? 'chevron-up' : 'chevron-down'} style={styles.dropdownButtonArrowStyle} />
-            </View>
+              <Icon name={isOpened ? 'chevron-up' : 'chevron-down'} style={[styles.dropdownButtonArrowStyle, {color:theme.text}]} />
+            </Animated.View>
           )}
           renderItem={(item, index, isSelected) => (
-            <View style={{ ...styles.dropdownItemStyle, ...(isSelected && { backgroundColor: '#D2D9DF' }) }}>
-              {/* <Icon name="currency-usd" style={styles.dropdownItemIconStyle} /> */}
-              <Text style={styles.dropdownItemTxtStyle}>{item.currency_name}</Text>
+            <View style={{ ...styles.dropdownItemStyle, backgroundColor:theme.secondary, ...(isSelected && { backgroundColor:theme.primary }) }}>
+              <Text style={[styles.dropdownItemTxtStyle, {color:theme.text}]}>{item.currency_name}</Text>
             </View>
           )}
           showsVerticalScrollIndicator={false}
           dropdownStyle={styles.dropdownMenuStyle}
         />
-        {errors.currency ? <Text style={styles.errorText}>{errors.currency}</Text> : null}
 
         {/* Submit Button */}
-        <TouchableRipple
-          onPress={handleSubmit}
-          rippleColor="rgba(0, 0, 0, .32)"
-          style={styles.saveButton}
-        >
-          <View>
-            <Text style={styles.saveButtonText}>
-              {loading ? 'Submitting...' : 'Save'}
-            </Text>
-          </View>
-        </TouchableRipple>
-      </View>
+        <SaveButton title="Save" onPress={handleSubmit} loading={loading} />
+
+      {/* CustomAlert for success/error messages */}
+      <CustomAlert
+        visible={alertVisible}
+        title={alertType === 'success' ? 'Success' : 'Error'}
+        message={alertMessage}
+        confirmText="OK"
+        onOk={() => setAlertVisible(false)}
+        theme={theme}
+        type={alertType}
+      />
+ 
     </View>
   );
 };
@@ -187,6 +223,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginRight: 10,
+    borderRadius:5,
   },
   dropdownButtonStyle: {
     height: 50,
@@ -205,7 +242,7 @@ const styles = StyleSheet.create({
     color: '#151E26',
   },
   dropdownButtonArrowStyle: {
-    fontSize: 28,
+    fontSize: 20,
   },
   dropdownButtonIconStyle: {
     fontSize: 28,

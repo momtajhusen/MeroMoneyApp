@@ -106,6 +106,8 @@ const AddWallets = () => {
         setAlertType('error');
         setAlertVisible(true);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -143,7 +145,7 @@ const AddWallets = () => {
         >
           <View style={styles.touchableContent}>
             <MaterialIcons color={theme.text} name="currency-exchange" size={22} />
-            <Text style={{ color: theme.text }}>{currencyCode}</Text>
+            <Text style={{ color: theme.text }}> {currencyCode ? currencyCode : 'Select Currency'}</Text>
           </View>
         </TouchableRipple>
       </Animated.View>
