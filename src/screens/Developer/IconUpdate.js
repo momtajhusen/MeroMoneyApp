@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   dropdownItem: {
-    height: 50,
+    paddingVertical:12,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,

@@ -1,12 +1,18 @@
 //import liraries
 import React, { Component } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { rw, rh, rf } from '../themes/responsive';  
+import { useTheme } from '../themes/ThemeContext';
+
 
 // create a component
 const Notification = () => {
+
+    const { theme } = useTheme(); 
+
     return (
-        <View style={styles.container}>
-            <Text>Notification</Text>
+        <View style={[styles.container, {backgroundColor:theme.primary}]}>
+            <Text style={{fontWeight:"bold", color:theme.text}}>No Notification</Text>
         </View>
     );
 };
@@ -17,7 +23,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#2c3e50',
     },
 });
 

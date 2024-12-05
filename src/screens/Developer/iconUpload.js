@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 50,
+    height: 55,
     paddingHorizontal: 10,
     fontSize: 18,
     borderRadius: 5,
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   dropdownItem: {
-    height: 50,
+    paddingVertical:12,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,

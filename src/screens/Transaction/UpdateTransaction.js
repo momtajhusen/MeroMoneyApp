@@ -39,7 +39,7 @@ const UpdateTransaction = () => {
   };
 
   const CategorySelect = () => {
-    dispatch({ type: 'SET_CATEGORY_NAVIGATION', payload: 'AddTransactions' });
+    dispatch({ type: 'SET_CATEGORY_NAVIGATION', payload: 'UpdateTransaction' });
     navigation.navigate('Categories');
   };
 
@@ -105,6 +105,7 @@ const UpdateTransaction = () => {
       <WalletSelector
         onPress={() => navigation.navigate('SelectWallet')}
         walletName={state.walletName}
+        walletImage={state.walletImage}
       />
 
       <NoteSelector

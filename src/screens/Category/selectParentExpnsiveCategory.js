@@ -14,7 +14,6 @@ const ParentExpenseCategory = () => {
 
   const { theme } = useTheme();
 
-
   // Base URL for your API or CDN
   const BASE_URL = 'https://finance.scriptqube.com/storage/';
 

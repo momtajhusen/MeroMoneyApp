@@ -70,12 +70,14 @@ const EditWallet = ({ route }) => {
     }
   };
 
+  alert(BASE_URL+state.walletImage);
+
   return (
     <View className="p-4 flex-1" style={{ backgroundColor: theme.primary }}>
       <View className="p-2" style={[styles.row, { backgroundColor: theme.secondary }]}>
         <TouchableRipple onPress={() => navigation.navigate('SelectItonsTabs')}>
           <Image
-            source={{ uri: selectIconImage || defaultIconImage }}
+            source={{ uri:BASE_URL+state.walletImage}}
             style={styles.image}
             resizeMode="contain"
           />

@@ -65,6 +65,17 @@ const CustomBottomSheet = ({ visible, onClose }) => {
   useEffect(() => {
     if (visible) {
       setShowModal(true);
+      setFilterValues({
+        amountFilterType: state.transactionFilter.amountFilterType,
+        walletFilterType: state.transactionFilter.walletFilterType,
+        transactionType: state.transactionFilter.transactionType,
+        note: state.transactionFilter.note,
+        amount: {
+          min: state.transactionFilter.amount.min,
+          max: state.transactionFilter.amount.max,
+        },
+      });
+  
       Animated.timing(translateY, {
         toValue: 0,
         duration: 300,
@@ -77,8 +88,10 @@ const CustomBottomSheet = ({ visible, onClose }) => {
         useNativeDriver: true,
       }).start(() => setShowModal(false));
     }
+  
     fetchWalletTypes();
-  }, [visible, translateY]);
+  }, [visible]);
+  
 
   const handleClose = () => {
     Animated.timing(translateY, {

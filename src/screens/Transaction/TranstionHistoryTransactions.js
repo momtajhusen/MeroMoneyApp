@@ -13,7 +13,6 @@ import * as Animatable from 'react-native-animatable';
 
 import { rw, rh, rf } from '../../themes/responsive';
 
-
 import {LinearGradient} from 'expo-linear-gradient';
 import { createShimmerPlaceholder } from 'react-native-shimmer-placeholder';
 const ShimmerPlaceholder = createShimmerPlaceholder(LinearGradient);

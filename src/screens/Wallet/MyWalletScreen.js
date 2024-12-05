@@ -64,6 +64,16 @@ const Wallet = () => {
     dispatch({ type: 'SET_ICON_IMAGE', payload: BASE_URL + wallet.icon_path });
     dispatch({ type: 'SET_CURRENCY_CODE', payload: wallet.currency_code });
     navigation.navigate('EditWallet', { data: wallet });
+
+    dispatch({
+      type: 'SET_WALLET',
+      payload: {
+        walletId: wallet.wallet_id,
+        walletName: wallet.wallets_name,
+        walletImage: wallet.wallets_icon,
+      },
+    });
+    
   };
 
   useFocusEffect(

@@ -114,11 +114,9 @@ const AddTransaction = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (textInputRef.current) {
-  //     textInputRef.current.focus();
-  //   }
-  // }, []);
+  useEffect(() => {
+     alert(state.walletImage);
+  }, []);
   
 
   return (
@@ -150,6 +148,7 @@ const AddTransaction = () => {
         <WalletSelector
           onPress={() => navigation.navigate('SelectWallet')}
           walletName={state.walletName}
+          walletImage={state.walletImage}
         />
       </Animated.View>
 
