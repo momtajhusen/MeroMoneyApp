@@ -57,6 +57,7 @@ const AddTransaction = () => {
     const note = state.transactionNote;
     const transaction_date = selectedDate;
 
+
     // Sequential validation with shake animations
     if (!amount || isNaN(amount)) {
       shakeAnimation(amountShake);
@@ -73,6 +74,8 @@ const AddTransaction = () => {
       return;
     }
 
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
     const payload = {
       user_id,
       wallet_id,
@@ -82,11 +85,18 @@ const AddTransaction = () => {
       transaction_date,
       attachment_url: null,
       exchange_rate_to_base: null,
+      timezone: userTimezone, 
     };
+
+    
+ 
 
     try {
       setIsLoading(true);
       const response = await apiClient.post('/transactions', payload);
+
+      console.log(response.data);
+
       if (response.status === 201) {
 
         // Handle success response

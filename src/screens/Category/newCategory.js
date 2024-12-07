@@ -4,7 +4,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../context/AppContext';
-import apiClient from '../../../apiClient'; // Make sure this is properly set up
+import apiClient from '../../../apiClient';  
+import SaveButton from '../../components/SaveButton';
 import  { useTheme } from '../../themes/ThemeContext';
 
 
@@ -71,7 +72,7 @@ const NewCategory = ({ route }) => {
           <TextInput
             style={[styles.input, {color:theme.text}]}
             placeholder="Category Name"
-            placeholderTextColor={theme.text}
+            placeholderTextColor={theme.subtext}
             value={categoryName}
             onChangeText={(value) => setCategoryName(value)}
           />
@@ -83,14 +84,13 @@ const NewCategory = ({ route }) => {
           className="p-3 mb-5"
         >
           <View style={styles.touchableContent}>
-          <Image
-              source={state.selectIconImage ? { uri: state.selectIconImage } : require('../../../assets/exp-inc.png')}
+            <Image
+              source={require('../../../assets/exp-inc.png')}
               style={{width:20, height:20}}
             />
-            
             <View className="ml-5" style={{width:'85%'}}>
               <View className="flex-row justify-between">
-                 <Text style={{ fontWeight: 'bold', color:theme.text }}>{categoryType ?? 'Type'}</Text>
+                 <Text style={{ fontWeight: 'bold', color:theme.subtext }}>{categoryType ?? 'Type'}</Text>
               </View>
             </View>
           </View>
@@ -108,19 +108,20 @@ const NewCategory = ({ route }) => {
           rippleColor="rgba(0, 0, 0, .32)"
           style={[styles.touchableRipple, , {backgroundColor:theme.secondary}]}
         >
-          <View className="p-2" style={[styles.touchableContent]}>
+          <View className="p-2 py-0" style={[styles.touchableContent]}>
             <MaterialIcons
               color={theme.text}
               name="category"
               size={22}
             />
             
-            <View className="ml-5" style={{ width: '85%' }}>
+            <View className="ml-5" style={{ width: '85%'}}>
               <Text style={{color:theme.text}}>Parent category</Text>
               <View className="flex-row justify-between">
-                <Text style={{ fontWeight: 'bold', color:theme.text }}>{state.categoryName ?? 'Select Category'}</Text>
-                
-                {/* Cancel icon should only show when categoryId is not null */}
+              <Text style={{ fontWeight: 'bold', color: state.categoryName ? theme.text : theme.subtext }}>
+                {state.categoryName ?? 'Select Category'}
+              </Text>
+
                 {state.categoryId !== null && (
                   <TouchableOpacity
                     onPress={() =>
@@ -136,16 +137,7 @@ const NewCategory = ({ route }) => {
           </View>
         </TouchableRipple>
 
-        <TouchableRipple
-          onPress={handleSave}
-          rippleColor="rgba(0, 0, 0, .32)"
-          style={{ backgroundColor: "#ddd", borderRadius: 10 }}
-          className="mt-5 p-3"
-        >
-          <View>
-            <Text style={{ textAlign: 'center' }}>Save</Text>
-          </View>
-        </TouchableRipple>
+        <SaveButton onPress={handleSave} />
       </View>
   );
 };
