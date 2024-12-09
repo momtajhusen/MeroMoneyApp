@@ -111,7 +111,6 @@ const AddTransaction = () => {
         
         setTimeout(() => {
           setAlertVisible(false);
-          //  navigation.navigate('Transactions');
         }, 2000);
 
       } else {
@@ -123,11 +122,6 @@ const AddTransaction = () => {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-     alert(state.walletImage);
-  }, []);
-  
 
   return (
     <View style={[styles.container, { backgroundColor: theme.primary }]}>

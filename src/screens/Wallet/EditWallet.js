@@ -21,19 +21,20 @@ const EditWallet = ({ route }) => {
   const [selectIconImage, setSelectIconImage] = useState(data.icon_path);
   const [balance, setBalance] = useState(data.balance ? data.balance.toString() : '');
 
-  const BASE_URL = 'https://finance.scriptqube.com/storage/';
-  const defaultIconImage = 'https://uxwing.com/wp-content/themes/uxwing/download/banking-finance/wallet-to-bank-icon.png';
-
-  // Dynamically set the selected icon image
   useEffect(() => {
-    if (state.selectIconId) {
+    if (state.walletId) {
       setIconId(state.selectIconId);
-      setSelectIconImage(state.selectIconImage ? `${BASE_URL}${state.selectIconPath}` : defaultIconImage);
+      setSelectIconImage(state.selectIconImage);
+
+      console.log(state.selectIconImage);
+    } else {
+      setSelectIconImage(data.selectIconImage);
     }
+
     if (state.selectCurrencyCode) {
       setCurrencyCode(state.selectCurrencyCode);
     }
-  }, [state.selectIconId, state.selectIconPath, state.selectCurrencyCode]);
+  }, [state.selectIconId, state.selectIconId, state.selectCurrencyCode]);
 
   const handleSave = async () => {
     if (!walletName || !currencyCode || !iconId || !balance) {
@@ -48,7 +49,7 @@ const EditWallet = ({ route }) => {
         icon_id: iconId,
         name: walletName,
         balance: parseFloat(balance),
-        currency: currencyCode,
+        currency: state.selectCurrencyId,
       });
 
       Alert.alert('Success', 'Wallet updated successfully!');
@@ -70,14 +71,12 @@ const EditWallet = ({ route }) => {
     }
   };
 
-  alert(BASE_URL+state.walletImage);
-
   return (
     <View className="p-4 flex-1" style={{ backgroundColor: theme.primary }}>
       <View className="p-2" style={[styles.row, { backgroundColor: theme.secondary }]}>
         <TouchableRipple onPress={() => navigation.navigate('SelectItonsTabs')}>
           <Image
-            source={{ uri:BASE_URL+state.walletImage}}
+            source={{ uri: selectIconImage}}
             style={styles.image}
             resizeMode="contain"
           />

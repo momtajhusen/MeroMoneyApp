@@ -73,7 +73,7 @@ const ExpenseCategory = () => {
   
 
   const handleDeleteCategory = (categoryId) => {
-    setModalVisible(true); // Show confirmation alert instead of deleting immediately
+    setModalVisible(true);
   };
 
   const confirmDeleteCategory = async () => {

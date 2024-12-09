@@ -143,6 +143,8 @@ export default (state, action) => {
     case SET_CATEGORY:
       return {
         ...state,
+        parentCategoryId: action.payload.parentCategoryId,
+        parentCategoryName: action.payload.parentCategoryName,
         categoryId: action.payload.categoryId,
         categoryName: action.payload.categoryName,
         categoryImage: action.payload.categoryImage,

@@ -13,16 +13,20 @@ const UpdateCategory = ({ route }) => {
   const { state, dispatch } = useContext(AppContext);
   const { theme } = useTheme();
 
-  const { categoryId, categoryName: initialName, categoryType, categoryImage, parentCategoryId: initialParentId } = route.params;
-
-  const [categoryName, setCategoryName] = useState(categoryName);
-  const [parentCategoryId, setParentCategoryId] = useState(initialParentId ?? null);
-
-  alert(categoryName);
+  const { categoryType } = route.params;
+ 
+  // Initialize local states using global state values as defaults
+  const [categoryId, setCategoryId] = useState(state.categoryId ?? '');
+  const [categoryName, setCategoryName] = useState(state.categoryName ?? '');
+  const [selectIconId, setSelectIconId] = useState(state.selectIconId ?? '');
+  const [parentCategoryName, setParentCategoryName] = useState(state.parentCategoryName ?? null);
+  const [parentCategoryId, setParentCategoryId] = useState(state.parentCategoryId ?? null);
 
   useEffect(() => {
-    setParentCategoryId(state.categoryId ?? initialParentId);
-  }, [state.categoryId]);
+    // Update local state if global state changes
+    setCategoryName(state.categoryName ?? '');
+    setParentCategoryId(state.parentCategoryId ?? null);
+  }, [state.categoryName, state.categoryId]);
 
   const handleUpdate = async () => {
     // Validate inputs
@@ -30,16 +34,22 @@ const UpdateCategory = ({ route }) => {
       Alert.alert('Validation Error', 'Please fill in all fields.');
       return;
     }
+  
+    // Create the payload object
+    const payload = {
+      name: categoryName,
+      type: categoryType,
+      icon_id: selectIconId,
+      parent_id: parentCategoryId,
+      user_id: state.userId,
+    };
 
+    console.log(payload);
+  
     try {
-      const response = await apiClient.put(`/categories/${categoryId}`, {
-        name: categoryName,
-        type: categoryType,
-        icon_id: state.selectIconId,
-        parent_id: parentCategoryId,
-        user_id: state.userId,
-      });
-
+      // Send the payload to the API
+      const response = await apiClient.put(`/categories/${categoryId}`, payload);
+  
       if (response.status === 200) {
         Alert.alert('Success', 'Category updated successfully!');
         dispatch({ type: 'SET_ICON_IMAGE', payload: null });
@@ -51,6 +61,7 @@ const UpdateCategory = ({ route }) => {
       console.error(error);
     }
   };
+  
 
   return (
     <View className="p-5 flex-1" style={{ backgroundColor: theme.primary }}>
@@ -110,14 +121,14 @@ const UpdateCategory = ({ route }) => {
           <View className="ml-5" style={{ width: '85%' }}>
             <Text style={{ color: theme.text }}>Parent category</Text>
             <View className="flex-row justify-between">
-            <Text style={{ fontWeight: 'bold', color: state.categoryName ? theme.text : theme.subtext }}>
-                {state.categoryName ?? 'Select Category'}
+            <Text style={{ fontWeight: 'bold', color: state.categoryName ? theme.subtext : theme.text }}>
+                {state.parentCategoryName ?? 'Select Category'}
               </Text>
 
-              {state.categoryId !== null && (
+              {state.parentCategoryId !== null && (
                 <TouchableOpacity
                   onPress={() =>
-                    dispatch({ type: 'SET_CATEGORY', payload: { categoryId: null, categoryName: null } })
+                    dispatch({ type: 'SET_CATEGORY', payload: { parentCategoryId: null, parentCategoryName: null } })
                   }
                 >
                   <MaterialIcons color={theme.text} name="cancel" size={22} />

@@ -18,6 +18,8 @@ const initialState = {
   userName: null,
 
   // Category-related state
+  parentCategoryId: null,
+  parentCategoryName: null,
   categoryId: null,
   categoryName: null,
   categoryImage: null,
