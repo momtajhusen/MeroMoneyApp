@@ -7,6 +7,7 @@ import { AppContext } from '../../context/AppContext';
 import apiClient from '../../../apiClient'; // Import your API client
 import { useTheme } from '../../themes/ThemeContext';
 import SaveButton from '../../components/SaveButton';
+import CustomAlert from '../../components/common/CustomAlert';
 
 const EditWallet = ({ route }) => {
   const { data } = route.params;
@@ -20,6 +21,11 @@ const EditWallet = ({ route }) => {
   const [iconId, setIconId] = useState(data.icon_id);
   const [selectIconImage, setSelectIconImage] = useState(data.icon_path);
   const [balance, setBalance] = useState(data.balance ? data.balance.toString() : '');
+
+  // State for alert
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('');
 
   useEffect(() => {
     if (state.walletId) {
@@ -52,19 +58,29 @@ const EditWallet = ({ route }) => {
         currency: state.selectCurrencyId,
       });
 
-      Alert.alert('Success', 'Wallet updated successfully!');
-      navigation.goBack();
-    } catch (error) {
-      console.error('Error updating wallet:', error);
+      setAlertMessage('Wallet updated successfully!');
+      setAlertType('success');
+      setAlertVisible(true);
 
+      setTimeout(() => {
+          navigation.goBack();
+      }, 2000);
+
+    } catch (error) {
       if (error.response && error.response.status === 422) {
         const validationErrors = error.response.data.errors;
         const firstError = Object.values(validationErrors).flat()[0];
-        Alert.alert('Validation Error', firstError);
+        setAlertMessage(firstError);
+        setAlertType('error');
+        setAlertVisible(true);
       } else if (error.response && error.response.status === 500) {
-        Alert.alert('Server Error', 'There is an issue with the server. Please try again later.');
+        setAlertMessage('There is an issue with the server. Please try again later.');
+        setAlertType('error');
+        setAlertVisible(true);
       } else {
-        Alert.alert('Error', 'Network error. Please check your internet connection and try again.');
+        setAlertMessage('Network error. Please check your internet connection and try again.');
+        setAlertType('error');
+        setAlertVisible(true);
       }
     } finally {
       setIsLoading(false);
@@ -101,6 +117,17 @@ const EditWallet = ({ route }) => {
           <Text style={{ marginLeft: 5, color: theme.text }}>{currencyCode}</Text>
         </View>
       </TouchableRipple>
+
+      {/* CustomAlert for success/error messages */}
+      <CustomAlert
+        visible={alertVisible}
+        title={alertType === 'success' ? 'Success' : 'Error'}
+        message={alertMessage}
+        confirmText="OK"
+        onOk={() => setAlertVisible(false)}
+        theme={theme}
+        type={alertType}
+      />
 
       <SaveButton title="Update" onPress={handleSave} loading={isLoading} />
     </View>

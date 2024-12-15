@@ -5,6 +5,8 @@ import { TouchableRipple } from 'react-native-paper';
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import { AppContext } from '../../context/AppContext';
 import  { useTheme } from '../../themes/ThemeContext';
+import { rw, rh, rf } from '../../themes/responsive';
+
 
 
 const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressDelete, onPressEdit }) => {
@@ -37,16 +39,17 @@ const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressDele
               <MenuTrigger>
                 <MaterialIcons 
                   color={theme.text}
-                  name="more-vert" 
+                  name="more-vert"
                   size={22} 
+                  style={{width:rw(10), textAlign:"center", paddingVertical:5}}
                 />
               </MenuTrigger>
-              <MenuOptions style={{ backgroundColor: theme.primary }}>
-                <MenuOption onSelect={onPressEdit} style={{ padding: 10 }}>
-                  <Text style={{ color: theme.text }}>Update</Text>
+              <MenuOptions style={{ backgroundColor: theme.secondary, borderWidth:0.5, borderColor:theme.border}}>
+                <MenuOption onSelect={onPressEdit} style={{ padding: 10,  borderBottomWidth:0.5, borderColor:theme.border}}>
+                  <Text style={{ color: theme.text, paddingVertical:5, textAlign:"center"}}>Update</Text>
                 </MenuOption>
                 <MenuOption onSelect={onPressDelete} style={{ padding: 10 }}>
-                  <Text style={{ color: theme.text }}>Delete</Text>
+                  <Text style={{ color: theme.text, paddingVertical:5, textAlign:"center"}}>Delete</Text>
                 </MenuOption>
               </MenuOptions>
             </Menu>

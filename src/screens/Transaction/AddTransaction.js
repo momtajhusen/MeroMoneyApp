@@ -105,16 +105,20 @@ const AddTransaction = () => {
         dispatch({ type: 'SET_CATEGORY', payload: { categoryId: null, categoryName: null, categoryImage: null } });
         dispatch({ type: 'TRANSCTION_NOTE', payload: null });
         dispatch({ type: 'SET_WALLET', payload: { walletId: null, walletName: null } });
-        
+        dispatch({ type: 'GLOBAL_REFRESH', payload: Math.random() });
         setTimeout(() => {
           setAlertVisible(false);
         }, 2000);
 
       } else {
-        Alert.alert('Error', 'Failed to save the transaction.');
+        setAlertMessage('Failed to save the transaction.');
+        setAlertType('error');
+        setAlertVisible(true);
       }
     } catch (error) {
-      Alert.alert('Message', error.response?.data?.error || error.message);
+      setAlertMessage(error.response?.data?.error || error.message);
+      setAlertType('error');
+      setAlertVisible(true);
     } finally {
       setIsLoading(false);
     }

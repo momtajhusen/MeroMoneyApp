@@ -11,12 +11,19 @@ import DatePicker from '../../components/DatePicker';
 import WalletSelector from '../../components/WalletSelector';
 import SaveButton from '../../components/SaveButton';
 import { useTheme } from '../../themes/ThemeContext';
+import CustomAlert from '../../components/common/CustomAlert';
+
 
 const UpdateTransaction = () => {
   const BASE_URL = 'https://finance.scriptqube.com/storage/';
   const { state, dispatch } = useContext(AppContext);
   const { theme } = useTheme();
   const navigation = useNavigation();
+
+  // State for alert
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('');
 
   // Use data directly from the context state
   const [transactionAmount, setTransactionAmount] = useState(state.transactionAmount || '');
@@ -72,15 +79,23 @@ const UpdateTransaction = () => {
       setIsLoading(true);
       const response = await apiClient.put(`/transactions/${state.transactionId}`, payload);
       if (response.status === 200) {
-        Alert.alert('Success', 'Transaction updated successfully.');
-        dispatch({ type: 'RESET_TRANSACTION' });  // Clear all related states
-        navigation.navigate('Transactions');
+        setAlertMessage('Transaction updated successfully.');
+        setAlertType('success');
+        setAlertVisible(true);
+        dispatch({ type: 'RESET_TRANSACTION' }); 
+        setTimeout(() => {
+          navigation.navigate('Transactions');
+        }, 2000);
       } else {
-        Alert.alert('Error', 'Failed to update the transaction.');
+        setAlertMessage('Failed to update the transaction.');
+        setAlertType('error');
+        setAlertVisible(true);
       }
     } catch (error) {
       console.error(error.response || error.message);
-      Alert.alert('Message', error.response?.data?.error || error.message);
+      setAlertMessage(error.response || error.message);
+      setAlertType('error');
+      setAlertVisible(true);
     } finally {
       setIsLoading(false);
     }
@@ -130,6 +145,17 @@ const UpdateTransaction = () => {
       title="Update"
         onPress={TransactionUpdate}
         loading={isLoading}
+      />
+
+      {/* CustomAlert for success/error messages */}
+      <CustomAlert
+        visible={alertVisible}
+        title={alertType === 'success' ? 'Success' : 'Error'}
+        message={alertMessage}
+        confirmText="OK"
+        onOk={() => setAlertVisible(false)}
+        theme={theme}
+        type={alertType}
       />
     </View>
   );
