@@ -2,6 +2,17 @@
   "expo": {
     "name": "MeroMoney",
     "slug": "MeroMoney",
-    "version": "1.0.0"
+    "version": "1.0.0",
+    "extra": {
+      "eas": {
+        "projectId": "5ab0cdbf-1ae3-41be-957c-c1ac2893fb49"
+      }
+    },
+    "runtimeVersion": "1.0.0",
+    "updates": {
+      "url": "https://u.expo.dev/5ab0cdbf-1ae3-41be-957c-c1ac2893fb49"
+    },
+    "android": {},
+    "ios": {}
   }
 }
