@@ -1,6 +1,6 @@
 // Import libraries
 import React, { useContext } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import ExpenseCategory from '../screens/Category/expenseCategory';
 import IncomeCategory from '../screens/Category/IncomeCategory';
@@ -15,7 +15,7 @@ const SelectCategoryTabNavigation = () => {
     const { theme } = useTheme();
     
     return (
-        <View style={{ flex: 1, backgroundColor: theme.primary, padding: 0, margin: 0 }}>
+        <View style={{ flex: 1, backgroundColor: theme.primary, padding: 0, margin: 0,  }}>
             <Tab.Navigator
                 initialRouteName="EXPENSE" 
                 backBehavior="initialRoute" 

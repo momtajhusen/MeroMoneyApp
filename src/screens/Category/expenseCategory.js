@@ -26,7 +26,6 @@ const ExpenseCategory = () => {
     try {
       const response = await apiClient.get('/categories');
       setCategory(response.data);
-      console.log(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -68,7 +67,9 @@ const ExpenseCategory = () => {
 
   
     setOptionsModalVisible(false);
+
     navigation.navigate('UpdateCategory', { categoryType: 'Expense' });
+    
   };
   
 
@@ -100,6 +101,24 @@ const ExpenseCategory = () => {
       fetchCategoryData();
     }
   };
+
+
+
+  const addCategory = ()=>{
+    dispatch({ type: 'SET_ICON_IMAGE', payload: null });
+    dispatch({ type: 'SET_ICON_ID', payload: null });    
+    dispatch({
+      type: 'SET_CATEGORY',
+      payload: {
+        parentCategoryId: null,
+        parentCategoryName: null,
+        categoryId: null,
+        categoryName: null,
+        categoryImage: null,
+      },
+    });
+    navigation.navigate('NewCategory', { categoryType: 'Expense' })
+  }
   
 
   const renderSubcategories = ({ item: parentCategory }) => {
@@ -154,7 +173,7 @@ const ExpenseCategory = () => {
   return (
     <View className="p-4 flex-1" style={{ backgroundColor: theme.primary }}>
       <TouchableOpacity 
-        onPress={() => navigation.navigate('NewCategory', { categoryType: 'Expense' })}
+        onPress={() => addCategory()}
         style={{ backgroundColor: theme.secondary, borderWidth: 1, borderColor: theme.border }}
         className="p-3 mb-3"
       >

@@ -88,9 +88,6 @@ const AddTransaction = () => {
       timezone: userTimezone, 
     };
 
-    
- 
-
     try {
       setIsLoading(true);
       const response = await apiClient.post('/transactions', payload);

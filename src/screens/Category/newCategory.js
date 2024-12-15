@@ -19,11 +19,14 @@ const NewCategory = ({ route }) => {
 
   const [categoryName, setCategoryName] = useState(null);
   const [parentCategoryId, setParentCategoryId] = useState(null);
+  const [parentCategoryName, setParentCategoryName] = useState(null);
+ 
   
 
   useEffect(() => {
-    setParentCategoryId(state.categoryId);
-  }, [state.categoryId]);
+    setParentCategoryName(state.parentCategoryName);
+    setParentCategoryId(state.parentCategoryId);
+  }, [state.parentCategoryName, state.categoryName]);
 
   const handleSave = async () => {
     // Validate inputs
@@ -42,9 +45,7 @@ const NewCategory = ({ route }) => {
       });
   
       if (response.status === 201) {
-        Alert.alert('Success', 'Category created successfully!');
-        dispatch({ type: 'SET_ICON_IMAGE', payload: null });
-        dispatch({ type: 'SET_ICON_ID', payload: null });
+        Alert.alert('Success', 'Category created successfully!');    
         setCategoryName(null);  // Correct setter function here
         setParentCategoryId(null);
         navigation.goBack(); // Navigate back to the previous screen
@@ -118,8 +119,8 @@ const NewCategory = ({ route }) => {
             <View className="ml-5" style={{ width: '85%'}}>
               <Text style={{color:theme.text}}>Parent category</Text>
               <View className="flex-row justify-between">
-              <Text style={{ fontWeight: 'bold', color: state.categoryName ? theme.text : theme.subtext }}>
-                {state.categoryName ?? 'Select Category'}
+              <Text style={{ fontWeight: 'bold', color: parentCategoryName ? theme.text : theme.subtext }}>
+                {parentCategoryName ?? 'Select Category'}
               </Text>
 
                 {state.categoryId !== null && (
