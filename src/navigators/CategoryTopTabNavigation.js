@@ -34,30 +34,24 @@ const SelectCategoryTabNavigation = () => {
                         fontWeight: 'bold', 
                         textTransform: 'uppercase', 
                     },  
-                    tabBarActiveTintColor: theme.accent, // Active tab label color
-                    tabBarInactiveTintColor: theme.text, // Inactive tab label color
-                    tabBarPressColor: theme.secondary, // Ripple effect color on press (Android)
-                    tabBarShowLabel: true, // Show label on the tab
-                    tabBarScrollEnabled: false, // Whether the tab bar is scrollable
-                    tabBarItemStyle: { width: 'auto' }, // Individual tab item style
+                    tabBarActiveTintColor: theme.accent,
+                    tabBarInactiveTintColor: theme.text,
+                    tabBarPressColor: theme.secondary, 
+                    tabBarShowLabel: true,  
+                    tabBarScrollEnabled: false, 
+                    tabBarItemStyle: { width: 'auto' },  
                 }}
             >
-                <Tab.Screen 
-                    name="EXPENSE" 
-                    component={ExpenseCategory} 
-                    options={{
-                        title: 'Expense', // Title of the screen
-                        tabBarLabel: 'Expense', // Custom label for the tab
-                    }} 
-                />
-                <Tab.Screen 
-                    name="INCOME" 
-                    component={IncomeCategory} 
-                    options={{
-                        title: 'Income', // Title of the screen
-                        tabBarLabel: 'Income', // Custom label for the tab
-                    }} 
-                />
+  <Tab.Screen 
+    name="EXPENSE" 
+    component={ExpenseCategory} 
+    options={{ title: 'Expense' }} 
+  />
+  <Tab.Screen 
+    name="INCOME" 
+    component={IncomeCategory} 
+    options={{ title: 'Income' }} 
+  />
             </Tab.Navigator>
         </View>
     );

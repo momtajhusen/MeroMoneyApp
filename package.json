@@ -55,6 +55,7 @@
     "react-native-screens": "~4.1.0",
     "react-native-select-dropdown": "^4.0.1",
     "react-native-shimmer-placeholder": "^2.0.9",
+    "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^15.8.0",
     "react-native-swiper": "^1.6.0",
     "react-native-tab-view": "^3.5.2",

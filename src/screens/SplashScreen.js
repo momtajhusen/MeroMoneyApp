@@ -1,17 +1,25 @@
 import React, { useEffect, useContext } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, StatusBar } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import apiClient from '../../apiClient'; 
 import { AppContext } from '../context/AppContext'; 
 import * as Animatable from 'react-native-animatable';
 import { useTheme } from '../themes/ThemeContext';
-import { rw, rh } from '../themes/responsive';
+import { rw, rh, rf } from '../themes/responsive';
+import { useFocusEffect } from "@react-navigation/native";
+
 
 const Splash = () => {
   const navigation = useNavigation();
   const { dispatch } = useContext(AppContext);
   const { theme } = useTheme();
+
+  useFocusEffect(() => {
+    StatusBar.setTranslucent(true); 
+    StatusBar.setBackgroundColor('transparent'); 
+    StatusBar.setBarStyle('dark-content');  
+  });
 
   useEffect(() => {
     const checkIntroAndAuthToken = async () => {
@@ -56,12 +64,15 @@ const Splash = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.primary }]}>
-      <Animatable.Image
-        animation="zoomIn"
-        source={require('../../assets/logo.png')}
-        style={styles.logo}
-        resizeMode="contain"
-      />
+      <View>
+        <Animatable.Image
+          animation="zoomIn"
+          source={require('../../assets/logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+        {/* <Text style={{color:theme.text, textAlign:"center", fontSize:rf(3), letterSpacing: 2}}>Saver</Text> */}
+      </View>
     </View>
   );
 };
@@ -73,8 +84,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: rw(60),  // Adjusted width for responsiveness
-    height: rh(30), // Adjusted height for responsiveness
+    width: rw(30),
+    height: rw(30),  
   },
 });
 

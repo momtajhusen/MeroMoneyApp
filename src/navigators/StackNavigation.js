@@ -55,9 +55,9 @@ const StackNavigation = () => {
     return (
       <View style={{ width: rw(92), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={require('../../assets/logo.png')} style={{ width: rw(9), height: rw(9) }} />
-          <Text style={{ fontFamily: 'Rowdies-Bold', letterSpacing: 2,  color: theme.text, fontSize: rf(2.3), marginLeft: rw(2), fontWeight: 'bold' }}>
-            Saver
+          <Image source={require('../../assets/logo.png')} style={{ width: rw(9), height: rw(8) }} />
+          <Text style={{ fontFamily: 'Rowdies-Bold', letterSpacing: 1,  color: theme.text, fontSize: rf(2.3), marginLeft: rw(2), fontWeight: 'bold' }}>
+            Payd
           </Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>

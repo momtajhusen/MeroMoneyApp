@@ -20,7 +20,7 @@ const ListItems = ({ icon, title, subtitle, onPress, showArrow = true }) => {
         >
             <View style={styles.container}>
                 <View style={styles.iconTextContainer}>
-                    <MaterialIcons color={theme.text} name={icon} size={rf(3)} />
+                    <MaterialIcons color={theme.accent} name={icon} size={rf(3)} />
                     <View>
                         <Text style={[styles.text, { color: theme.text }]}>{title}</Text>
                         {subtitle ? (
@@ -31,7 +31,7 @@ const ListItems = ({ icon, title, subtitle, onPress, showArrow = true }) => {
                     </View>
                 </View>
                 {showArrow && (
-                    <MaterialIcons color={theme.text} name="arrow-forward-ios" size={rf(2.2)} />
+                    <MaterialIcons color={theme.accent} name="arrow-forward-ios" size={rf(2.2)} />
                 )}
             </View>
         </TouchableRipple>
