@@ -12,7 +12,15 @@
     "updates": {
       "url": "https://u.expo.dev/5ab0cdbf-1ae3-41be-957c-c1ac2893fb49"
     },
-    "android": {},
-    "ios": {}
+    "android": {
+       "package": "com.scriptqubeofficial.meromoney"
+    },
+    "ios": {},
+    "splash": {
+      "image": "", 
+      "backgroundColor": "#ffffff",  
+      "resizeMode": "contain"
+    }
+    
   }
 }

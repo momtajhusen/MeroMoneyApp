@@ -2,7 +2,7 @@ export const Light = {
   primary: '#FFFFFF',
   secondary: '#F2F2F2',
   tertiary: '#CFCFCF',
-  accent: '#3FA7D6',
+  accent: '#E37455',
   warning: '#F8E71C',
   error: '#a10625',
   background: '#FFFFFF',
@@ -21,7 +21,7 @@ export const Dark = {
   primary: '#0D1017',
   secondary: '#161B21',
   tertiary: '#495461',
-  accent: '#3FA7D6',
+  accent: '#E37455',
   warning: '#F8E71C',
   error: '#a10625',
   background: '#1E1E1E',
@@ -40,7 +40,7 @@ export const BlueDark = {
   primary: '#0D1F2D',        // Deep midnight blue
   secondary: '#102A43',      // Slightly lighter blue
   tertiary: '#243B53',       // Medium blue for accents
-  accent: '#3FA7D6',         // Bright sky blue accent
+  accent: '#E37455',         // Bright sky blue accent
   warning: '#FFC107',        // Yellow for warnings
   error: '#D32F2F',          // Red for errors
   background: '#0D1F2D',
@@ -59,7 +59,7 @@ export const GreenDark = {
   primary: '#002B27',        // Deep teal background
   secondary: '#003F3C',      // Darker shade of teal
   tertiary: '#00796B',       // Emerald green for accents
-  accent: '#3FA7D6',         // Bright green accent
+  accent: '#E37455',         // Bright green accent
   warning: '#FFC107',        // Yellow for warnings
   error: '#FF5252',          // Red for errors
   background: '#002B27',

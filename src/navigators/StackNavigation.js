@@ -55,13 +55,13 @@ const StackNavigation = () => {
     return (
       <View style={{ width: rw(92), flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Image source={require('../../assets/logo.png')} style={{ width: rw(10), height: rw(10) }} />
-          <Text style={{ color: theme.text, fontSize: rf(2.3), marginLeft: rw(2), fontWeight: 'bold' }}>
-            MeroMoney
+          <Image source={require('../../assets/logo.png')} style={{ width: rw(9), height: rw(9) }} />
+          <Text style={{ fontFamily: 'Rowdies-Bold', letterSpacing: 2,  color: theme.text, fontSize: rf(2.3), marginLeft: rw(2), fontWeight: 'bold' }}>
+            saVer
           </Text>
         </View>
         <TouchableOpacity onPress={() => navigation.navigate('Notification')}>
-          <MaterialIcons name='notifications' size={rf(2.7)} color={theme.text} />
+           <MaterialIcons name='notifications' size={rf(2.7)} color={theme.text} />
         </TouchableOpacity>
       </View>
     );
