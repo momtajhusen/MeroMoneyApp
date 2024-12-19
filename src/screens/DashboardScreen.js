@@ -6,12 +6,14 @@ import { useTheme } from '../themes/ThemeContext';
 import CustomLineChart from '../components/Chats/CustomLineChart';
 import TotalBalanceWithWallets from './Dashboard/TotalBalanceWithWallets';
 import TopSpending from './Dashboard/TopSpending';
-import { rw, rh, rf } from '../themes/responsive';  
+import { rw, rh, rf } from '../themes/responsive';
 
 
 const Dashboard = () => {
   const { state, dispatch } = useContext(AppContext); // Access dispatch from context
   const { theme } = useTheme(); 
+
+
 
   // State for refresh control
   const [refreshing, setRefreshing] = useState(false);

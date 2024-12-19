@@ -156,7 +156,7 @@ const TransactionHistoryTransactions = () => {
             <TouchableRipple
                 onPress={() => handleItemClick(item)}
                 rippleColor="rgba(0, 0, 0, .32)"
-                style={{ backgroundColor: theme.secondary }}
+                style={{paddingBottom:rh(1), backgroundColor: theme.primary, borderBottomWidth:0.2, borderColor:theme.border }}
                 key={item.id}
                 className="mb-0.5 py-1"
             >

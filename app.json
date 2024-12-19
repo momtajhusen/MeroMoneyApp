@@ -13,14 +13,15 @@
       "url": "https://u.expo.dev/5ab0cdbf-1ae3-41be-957c-c1ac2893fb49"
     },
     "android": {
-       "package": "com.scriptqubeofficial.meromoney"
+      "package": "com.scriptqubeofficial.meromoney"
     },
     "ios": {},
     "splash": {
-      "image": "", 
+      "image": "",
       "backgroundColor": "#ffffff",  
-      "resizeMode": "contain"
-    }
-    
+      "resizeMode": "contain",
+      "disable": true
+    },
+    "newArchEnabled": true
   }
 }
