@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Alert, Animated } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +7,8 @@ import { AppContext } from '../../context/AppContext';
 import apiClient from '../../../apiClient';  
 import SaveButton from '../../components/SaveButton';
 import  { useTheme } from '../../themes/ThemeContext';
+import CustomAlert from '../../components/common/CustomAlert';
+
 
 
 const NewCategory = ({ route }) => {
@@ -20,8 +22,26 @@ const NewCategory = ({ route }) => {
   const [categoryName, setCategoryName] = useState(null);
   const [parentCategoryId, setParentCategoryId] = useState(null);
   const [parentCategoryName, setParentCategoryName] = useState(null);
- 
-  
+
+    // State for alert
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('');
+
+  // Animated values for shaking
+  const categoryNameShake = useRef(new Animated.Value(0)).current;
+  const iconShake = useRef(new Animated.Value(0)).current;
+
+  // Shake animation function
+  const shakeAnimation = (animatedValue) => {
+    Animated.sequence([
+      Animated.timing(animatedValue, { toValue: -10, duration: 100, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: 10, duration: 100, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: -5, duration: 100, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: 5, duration: 100, useNativeDriver: true }),
+      Animated.timing(animatedValue, { toValue: 0, duration: 100, useNativeDriver: true }),
+    ]).start();
+  };
 
   useEffect(() => {
     setParentCategoryName(state.parentCategoryName);
@@ -29,12 +49,18 @@ const NewCategory = ({ route }) => {
   }, [state.parentCategoryName, state.categoryName]);
 
   const handleSave = async () => {
-    // Validate inputs
-    if (!categoryName || !state.selectIconId) {
-      Alert.alert('Validation Error', 'Please fill in all fields.');
+
+    if(!state.selectIconId){
+      shakeAnimation(iconShake);
       return;
     }
-  
+ 
+    if (!categoryName) {
+      shakeAnimation(categoryNameShake);
+      return;
+    }
+
+
     try {
       const response = await apiClient.post('/categories', {
         name: categoryName,
@@ -45,13 +71,21 @@ const NewCategory = ({ route }) => {
       });
   
       if (response.status === 201) {
-        Alert.alert('Success', 'Category created successfully!');    
+        setAlertMessage('Category created successfully!');
+        setAlertType('success');
+        setAlertVisible(true);
+        
         setCategoryName(null);  // Correct setter function here
         setParentCategoryId(null);
-        navigation.goBack(); // Navigate back to the previous screen
+
+        setTimeout(()=>{
+          navigation.goBack(); 
+        },2000);
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to create category. Please try again.');
+      setAlertMessage('Failed to create category. Please try again.');
+      setAlertType('error');
+      setAlertVisible(true);
       console.error(error);
     }
   };
@@ -64,19 +98,23 @@ const NewCategory = ({ route }) => {
           <TouchableOpacity 
             onPress={() => { navigation.navigate('SelectItonsTabs'); }} 
           >
-            <Image
-              source={state.selectIconImage ? { uri: state.selectIconImage } : require('../../../assets/default-icon.png')}
-              style={styles.image}
-            />
+          <Animated.Image
+            source={state.selectIconImage ? { uri: state.selectIconImage } : require('../../../assets/default-icon.png')}
+            style={[styles.image, { transform: [{ translateX: iconShake }] }]}
+          />
+
           </TouchableOpacity>
 
-          <TextInput
-            style={[styles.input, {color:theme.text}]}
-            placeholder="Category Name"
-            placeholderTextColor={theme.subtext}
-            value={categoryName}
-            onChangeText={(value) => setCategoryName(value)}
-          />
+          <Animated.View style={{width:100, flex:1, transform: [{ translateX: categoryNameShake }]}}>
+            <TextInput
+              style={[styles.input, {color:theme.text}]}
+              placeholder="Category Name"
+              placeholderTextColor={theme.subtext}
+              value={categoryName}
+              onChangeText={(value) => setCategoryName(value)}
+            />
+          </Animated.View>
+
         </View>
 
         <TouchableRipple
@@ -139,6 +177,17 @@ const NewCategory = ({ route }) => {
         </TouchableRipple>
 
         <SaveButton onPress={handleSave} />
+
+      {/* CustomAlert for success/error messages */}
+      <CustomAlert
+        visible={alertVisible}
+        title={alertType === 'success' ? 'Success' : 'Error'}
+        message={alertMessage}
+        confirmText="OK"
+        onOk={() => setAlertVisible(false)}
+        theme={theme}
+        type={alertType}
+      />
       </View>
   );
 };

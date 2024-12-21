@@ -19,6 +19,7 @@ const TransactionHistoryCategories = () => {
 
     const [transactionData, setTransactionData] = useState([]);
     const [isRefreshing, setIsRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [totalIncome, setTotalIncome] = useState(0);
     const [totalExpense, setTotalExpense] = useState(0);
     const [totalTransactions, setTotalTransactions] = useState(0);
@@ -30,7 +31,7 @@ const TransactionHistoryCategories = () => {
     // Fetch transaction categories data
     const fetchTransactionData = async () => {
         try {
-
+            setIsLoading(true);
             // Retrieve the stored transaction dates
             const storedDates = await AsyncStorage.getItem('transaction_dates');
             const parsedDates = storedDates ? JSON.parse(storedDates) : {};
@@ -79,6 +80,8 @@ const TransactionHistoryCategories = () => {
             console.error('Error fetching data:', error.response ? error.response.data : error.message);
         } finally {
             setIsRefreshing(false);
+            setIsLoading(false);
+
         }
     };
 
@@ -324,6 +327,17 @@ const applyFilters = (categories) => {
                 </View>
             </View>
 
+
+            {transactionData.length === 0 && !isLoading ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: theme.subtext, fontSize: 16 }}>
+                        No transactions available.
+                    </Text>
+                    <Text style={{ color: theme.subtext, fontSize: 16 }}>
+                        {dateRange}
+                    </Text>
+                </View>
+            ) : (
             <FlatList
                 data={transactionData}
                 renderItem={renderParentCategory}
@@ -336,6 +350,10 @@ const applyFilters = (categories) => {
                 }
                 className="mt-2"
             />
+        )}
+
+
+
         </View>
     );
 };

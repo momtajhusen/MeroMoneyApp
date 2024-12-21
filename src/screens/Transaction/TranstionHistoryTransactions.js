@@ -289,42 +289,91 @@ const TransactionHistoryTransactions = () => {
             </View>
 
             {/* FlatList for transactions */}
-            <FlatList
-                data={isLoading ? Array(20).fill({}) : transactionData} // Show placeholders while loading
-                renderItem={({ item, index }) => (
-                    isLoading ? (
-                        <View className="items-center p-1 flex-1" style={styles.itemContent}>
-                            <View style={styles.itemLeft}>
-                                <View style={styles.iconContainer}>
-                                    <ShimmerPlaceholder shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]} style={{ height: 30, width: 30, borderRadius: 5 }} />
-                                    <View style={[styles.walletIconContainer, {backgroundColor:'transparent'}]}>
-                                        <ShimmerPlaceholder shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]} style={{width:20, height:20, borderRadius: 5 }} />
+            {transactionData.length === 0 && !isLoading ? (
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: theme.subtext, fontSize: 16 }}>
+                        No transactions available.
+                    </Text>
+                    <Text style={{ color: theme.subtext, fontSize: 16 }}>
+                        {dateRange}
+                    </Text>
+                </View>
+            ) : (
+                <FlatList
+                    data={isLoading ? Array(20).fill({}) : transactionData} // Show placeholders while loading
+                    renderItem={({ item, index }) =>
+                        isLoading ? (
+                            <View className="items-center p-1 flex-1" style={styles.itemContent}>
+                                <View style={styles.itemLeft}>
+                                    <View style={styles.iconContainer}>
+                                        <ShimmerPlaceholder
+                                            shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]}
+                                            style={{ height: 30, width: 30, borderRadius: 5 }}
+                                        />
+                                        <View
+                                            style={[styles.walletIconContainer, { backgroundColor: 'transparent' }]}
+                                        >
+                                            <ShimmerPlaceholder
+                                                shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]}
+                                                style={{ width: 20, height: 20, borderRadius: 5 }}
+                                            />
+                                        </View>
+                                    </View>
+                                    <View className="pl-3 space-y-1">
+                                        <ShimmerPlaceholder
+                                            shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]}
+                                            style={{
+                                                height: 10,
+                                                width: '70%',
+                                                backgroundColor: theme.tertiary,
+                                                marginBottom: 3,
+                                            }}
+                                        />
+                                        <ShimmerPlaceholder
+                                            shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]}
+                                            style={{
+                                                height: 8,
+                                                width: '50%',
+                                                backgroundColor: theme.tertiary,
+                                            }}
+                                        />
                                     </View>
                                 </View>
-                                <View className="pl-3 space-y-1">
-                                    <ShimmerPlaceholder shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]} style={{ height: 10, width: '70%', backgroundColor: theme.tertiary, marginBottom: 3 }} />
-                                    <ShimmerPlaceholder shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]} style={{ height: 8, width: '50%', backgroundColor: theme.tertiary }} />
+                                <View className="space-y-2 justify-between">
+                                    <ShimmerPlaceholder
+                                        className="justify-end"
+                                        shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]}
+                                        style={{
+                                            height: 10,
+                                            width: '30%',
+                                            backgroundColor: theme.tertiary,
+                                        }}
+                                    />
+                                    <ShimmerPlaceholder
+                                        shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]}
+                                        style={{
+                                            height: 8,
+                                            width: '40%',
+                                            backgroundColor: theme.tertiary,
+                                        }}
+                                    />
                                 </View>
                             </View>
-                            <View className="space-y-2 justify-between">
-                                <ShimmerPlaceholder className="justify-end" shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]} style={{ height: 10, width: '30%', backgroundColor: theme.tertiary }} />
-                                <ShimmerPlaceholder shimmerColors={[theme.tertiary, theme.secondary, theme.tertiary]} style={{ height: 8, width: '40%', backgroundColor: theme.tertiary }} />
-                            </View>
-                        </View>
-                    ) : (
-                        renderItem({ item })
-                    )
-                )}
-                keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={isRefreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-                showsVerticalScrollIndicator={false}
-                className="mt-2 flex-1"
-            />
+                        ) : (
+                            renderItem({ item })
+                        )
+                    }
+                    keyExtractor={(item, index) =>
+                        item.id ? item.id.toString() : index.toString()
+                    }
+                    refreshControl={
+                        <RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />
+                    }
+                    showsVerticalScrollIndicator={false}
+                    className="mt-2 flex-1"
+                />
+            )}
+
 
         </View>
     );

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { View, Text, Image, TextInput, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
@@ -27,6 +27,21 @@ const UpdateCategory = ({ route }) => {
   const [parentCategoryName, setParentCategoryName] = useState(state.parentCategoryName ?? null);
   const [parentCategoryId, setParentCategoryId] = useState(state.parentCategoryId);
 
+    // Animated values for shaking
+    const categoryNameShake = useRef(new Animated.Value(0)).current;
+    const iconShake = useRef(new Animated.Value(0)).current;
+  
+    // Shake animation function
+    const shakeAnimation = (animatedValue) => {
+      Animated.sequence([
+        Animated.timing(animatedValue, { toValue: -10, duration: 100, useNativeDriver: true }),
+        Animated.timing(animatedValue, { toValue: 10, duration: 100, useNativeDriver: true }),
+        Animated.timing(animatedValue, { toValue: -5, duration: 100, useNativeDriver: true }),
+        Animated.timing(animatedValue, { toValue: 5, duration: 100, useNativeDriver: true }),
+        Animated.timing(animatedValue, { toValue: 0, duration: 100, useNativeDriver: true }),
+      ]).start();
+    };
+
   useEffect(() => {
     setParentCategoryName(state.parentCategoryName);
     setParentCategoryId(state.parentCategoryId);
@@ -34,10 +49,13 @@ const UpdateCategory = ({ route }) => {
   }, [state.parentCategoryName, state.selectIconId, state.categoryName, state.categoryId]);
 
   const handleUpdate = async () => {
-    if (!categoryName || !state.selectIconId) {
-      setAlertMessage('Please fill in all fields.');
-      setAlertType('error');
-      setAlertVisible(true);
+    if(!state.selectIconId){
+      shakeAnimation(iconShake);
+      return;
+    }
+ 
+    if (!categoryName) {
+      shakeAnimation(categoryNameShake);
       return;
     }
 
@@ -92,19 +110,21 @@ const UpdateCategory = ({ route }) => {
             navigation.navigate('SelectItonsTabs');
           }}
         >
-          <Image
-            source={state.selectIconImage ? { uri: state.selectIconImage } : null}
-            style={styles.image}
+          <Animated.Image
+            source={state.selectIconImage ? { uri: state.selectIconImage } : require('../../../assets/default-icon.png')}
+            style={[styles.image, { transform: [{ translateX: iconShake }] }]}
           />
         </TouchableOpacity>
 
-        <TextInput
-          style={[styles.input, { color: theme.text }]}
-          placeholder="Category Name"
-          placeholderTextColor={theme.subtext}
-          value={categoryName}
-          onChangeText={(value) => setCategoryName(value)}
-        />
+          <Animated.View style={{width:100, flex:1, transform: [{ translateX: categoryNameShake }]}}>
+            <TextInput
+              style={[styles.input, {color:theme.text}]}
+              placeholder="Category Name"
+              placeholderTextColor={theme.subtext}
+              value={categoryName}
+              onChangeText={(value) => setCategoryName(value)}
+            />
+          </Animated.View>
       </View>
 
       <TouchableRipple
