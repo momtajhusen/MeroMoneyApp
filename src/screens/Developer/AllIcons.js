@@ -6,6 +6,10 @@ import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/nativ
 import { Modal, Portal, Text, Button, PaperProvider } from 'react-native-paper';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '../../themes/ThemeContext';
+import { rw, rh, rf } from '../../themes/responsive';
+import CustomAlert from '../../components/common/CustomAlert';
+
+
 
 // create a component
 const AllIcons = () => {
@@ -29,6 +33,13 @@ const AllIcons = () => {
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: 'white', padding: 20 };
+
+  
+  // State for alert
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('');
 
   // Function to fetch icons
   const fetchIconData = async () => {
@@ -62,54 +73,46 @@ const AllIcons = () => {
   };
 
   const deleteIcon = async () => {
+    setModalVisible(false);
+    setLoading(true);
+  
     try {
-      // Show confirmation before deletion
-      Alert.alert(
-        "Delete Icon",
-        "Are you sure you want to delete this icon?",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-          },
-          {
-            text: "Delete",
-            onPress: async () => {
-              try {
-                // Send DELETE request
-                const response = await apiClient.delete(`/icons/${state.selectIconId}`);
-
-                // If the delete was successful, update the icons state
-                if (response.status === 204) {
-                  Alert.alert("Icon deleted successfully");
-
-                  // Remove the deleted icon from the state
-                  setIcons((prevIcons) =>
-                    prevIcons.filter((icon) => icon.id !== state.selectIconId)
-                  );
-
-                  // Close the modal
-                  hideModal();
-                } else {
-                  Alert.alert("Failed to delete icon");
-                }
-              } catch (error) {
-                if (error.response && error.response.data && error.response.data.error) {
-                  // Show server error message
-                  Alert.alert("Error", error.response.data.error);
-                } else {
-                  Alert.alert("Error", "An unexpected error occurred.");
-                }
-                console.error('Error deleting icon:', error);
-              }
-            },
-          },
-        ]
-      );
+      const response = await apiClient.delete(`/icons/${state.selectIconId}`);
+  
+      if (response.status === 204) {
+        setAlertMessage("Icon deleted successfully");
+        setAlertType('success');
+        setAlertVisible(true);
+  
+        setIcons((prevIcons) =>
+          prevIcons.filter((icon) => icon.id !== state.selectIconId)
+        );
+        hideModal();
+      } else {
+        setAlertMessage("Failed to delete icon");
+        setAlertType('error');
+        setAlertVisible(true);
+      }
     } catch (error) {
-      console.error("Error deleting icon:", error);
-      Alert.alert("Error", "Could not delete the icon. Please try again.");
+      // Debugging error response
+      console.error('Error deleting icon:', error);
+  
+      if (error.response && error.response.data && error.response.data.error) {
+        setAlertMessage(error.response.data.error);
+        setAlertType('info');
+        setAlertVisible(true);
+      } else {
+        setAlertMessage("An unexpected error occurred.");
+        setAlertType('error');
+        setAlertVisible(true);
+      }
+    } finally {
+      setLoading(false);
     }
+  };
+  
+  const handleDelete = () => {
+    deleteIcon();
   };
 
   const handleUpdate = () => {
@@ -207,20 +210,43 @@ const AllIcons = () => {
 
         {/* Modal for displaying icon information */}
         <Portal>
-          <Modal className="m-4" visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-            <View className="bg-gray-200 items-center p-3 justify-center">
+          <Modal className="m-4 p-4" visible={visible} onDismiss={hideModal} contentContainerStyle={{backgroundColor:theme.secondary, borderRadius:10}}>
+            <View className="items-center p-3 justify-center" style={{backgroundColor:theme.primary}}>
               <Image
                 className="shadow-md rounded-md"
                 source={{ uri: SelectedImage }}
                 style={{ width: 100, height: 100 }}
               />
-              <Text className="mt-2">ICON</Text>
+              <Text className="mt-2">{SelectedName}</Text>
             </View>
-            <Button className="bg-gray-300 mt-2 rounded-md" onPress={handleUpdate}>Update</Button>
-            <Button className="bg-red-200 mt-2 rounded-md" onPress={deleteIcon}>Delete</Button>
-            <Button className="bg-gray-300 mt-2 rounded-md" onPress={hideModal}>Close</Button>
+            <Button className="m-2 py-1 rounded-md" onPress={handleUpdate} style={{borderWidth:1, borderColor:theme.border}}>Update</Button>
+            <Button className="m-2 py-1 rounded-md" onPress={() => setModalVisible(true)} style={{borderWidth:1, borderColor:theme.border}}>Delete</Button>
+            <Button className="m-2 py-1 rounded-md" onPress={hideModal} style={{borderWidth:1, borderColor:theme.border}}>Close</Button>
           </Modal>
         </Portal>
+
+
+        <CustomAlert
+        visible={isModalVisible}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this transaction?"
+        confirmText="Delete"
+        onCancel={() => setModalVisible(false)}
+        onConfirm={handleDelete}
+        theme={theme}
+        type="warning"
+      />
+
+      <CustomAlert
+        visible={alertVisible}
+        title={alertType === 'success' ? 'Success' : 'Error'}
+        message={alertMessage}
+        confirmText="OK"
+        onOk={() => setAlertVisible(false)}
+        theme={theme}
+        type={alertType}
+      />
+
 
         <TouchableOpacity onPress={() => navigation.navigate('IconUpload')} className="p-3" style={{backgroundColor:theme.accent, borderRadius:10, position:"absolute", bottom:20, right:30}}>
            <MaterialIcons color={theme.text} name="add" size={22} />
