@@ -29,6 +29,7 @@ const CustomInput = ({ placeholder, value, onChangeText, keyboardType = 'default
         placeholder={placeholder}
         placeholderTextColor={theme.subtext} // Normal weight placeholder
         value={value}
+        autoFocus={true}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
       />

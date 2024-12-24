@@ -45,6 +45,7 @@ const Note = () => {
           value={state.transactionNote} // Display the note from state
           multiline={true}
           numberOfLines={4}
+          autoFocus={true}
           onChangeText={(value) => dispatch({ type: 'TRANSCTION_NOTE', payload: value })}
         />
       </View>

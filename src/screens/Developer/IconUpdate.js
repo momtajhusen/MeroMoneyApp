@@ -8,6 +8,8 @@ import apiClient from '../../../apiClient';
 import { useTheme } from '../../themes/ThemeContext';
 import SaveButton from '../../components/SaveButton';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import CustomAlert from '../../components/common/CustomAlert';
+
 
 
 const IconUpdate = ({ route }) => {
@@ -21,6 +23,11 @@ const IconUpdate = ({ route }) => {
   const [selectedIcon, setSelectedIcon] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ iconName: '', image: '', iconCategory: '' });
+
+    // State for alert
+    const [alertVisible, setAlertVisible] = useState(false);
+    const [alertMessage, setAlertMessage] = useState('');
+    const [alertType, setAlertType] = useState('');
 
   // Animated values for shaking
   const iconShake = useRef(new Animated.Value(0)).current;
@@ -120,14 +127,20 @@ const IconUpdate = ({ route }) => {
 
       // Handle success
       if (response.status === 200) {
-        Alert.alert('Success', 'Icon updated successfully!');
+        setAlertMessage('Icon updated successfully!');
+        setAlertType('success');
+        setAlertVisible(true);
         // Reset form
         setUpdatedIconName('');
         setUpdatedImageUri(null);
         setSelectedIcon(null);
-        navigation.goBack(); 
+        setTimeout(() => {
+          navigation.goBack();
+        },2000);
       } else {
-        Alert.alert('Error', 'Something went wrong. Please try again.');
+        setAlertMessage('Something went wrong. Please try again.');
+        setAlertType('error');
+        setAlertVisible(true);
       }
     } catch (error) {
       console.log(error.response.data.error);
@@ -204,6 +217,17 @@ const IconUpdate = ({ route }) => {
           dropdownStyle={[styles.dropdownMenu, { backgroundColor: theme.primary }]}
         />
       </Animated.View>
+
+      {/* CustomAlert for success/error messages */}
+      <CustomAlert
+        visible={alertVisible}
+        title={alertType === 'success' ? 'Success' : 'Error'}
+        message={alertMessage}
+        confirmText="OK"
+        onOk={() => setAlertVisible(false)}
+        theme={theme}
+        type={alertType}
+      />
 
       {/* Save Button */}
       <SaveButton title="Update" onPress={handleSubmit} loading={loading} />

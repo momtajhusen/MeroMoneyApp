@@ -51,7 +51,7 @@ const Currency = () => {
             className="mb-1"
             key={currency.id} // Add a unique key prop
           >
-            <View className="flex-row p-4 items-center justify-between border-b border-black-100" style={{backgroundColor:theme.secondary}}>
+            <View className="flex-row p-4 items-center justify-between" style={{backgroundColor:theme.secondary}}>
               <View className="flex-row space-x-2 items-center">
                 <Image
                   source={{ uri: `${BASE_URL}${currency.flag}` }}

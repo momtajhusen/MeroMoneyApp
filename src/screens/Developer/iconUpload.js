@@ -6,9 +6,14 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import apiClient from '../../../apiClient';
 import { useTheme } from '../../themes/ThemeContext';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import SaveButton from '../../components/SaveButton';
+import CustomAlert from '../../components/common/CustomAlert';
+
 
 const IconUpload = () => {
+    const navigation = useNavigation();
+  
   const { theme } = useTheme();
 
   const [iconName, setIconName] = useState('');
@@ -21,6 +26,11 @@ const IconUpload = () => {
   const iconShake = useRef(new Animated.Value(0)).current;
   const iconNameShake = useRef(new Animated.Value(0)).current;
   const iconCategoryShake = useRef(new Animated.Value(0)).current;
+
+  // State for alert
+  const [alertVisible, setAlertVisible] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertType, setAlertType] = useState('');
 
   // Shake animation function
   const shakeAnimation = (animatedValue) => {
@@ -109,16 +119,27 @@ const IconUpload = () => {
       });
 
       if (response.status === 201) {
-        Alert.alert('Success', 'Icon uploaded successfully!');
+        setAlertMessage('Icon uploaded successfully!');
+        setAlertType('success');
+        setAlertVisible(true);
+
         // Reset form
         setIconName('');
         setImageUri(null);
         setSelectedIcon(null);
+
+        setTimeout(() => {
+          navigation.goBack();
+        },2000);
       } else {
-        Alert.alert('Error', 'Something went wrong. Please try again.');
+        setAlertMessage('Something went wrong. Please try again.');
+        setAlertType('error');
+        setAlertVisible(true);
       }
     } catch (error) {
-      Alert.alert('Error', 'An unexpected error occurred. Please try again later.');
+      setAlertMessage('An unexpected error occurred. Please try again later.');
+      setAlertType('error');
+      setAlertVisible(true);
     } finally {
       setLoading(false);
     }
@@ -180,6 +201,17 @@ const IconUpload = () => {
           dropdownStyle={[styles.dropdownMenu, { backgroundColor: theme.primary }]}
         />
       </Animated.View>
+
+      {/* CustomAlert for success/error messages */}
+      <CustomAlert
+        visible={alertVisible}
+        title={alertType === 'success' ? 'Success' : 'Error'}
+        message={alertMessage}
+        confirmText="OK"
+        onOk={() => setAlertVisible(false)}
+        theme={theme}
+        type={alertType}
+      />
 
       {/* Save Button */}
       <SaveButton title="Save" onPress={handleSubmit} loading={loading} />

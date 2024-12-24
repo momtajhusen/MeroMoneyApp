@@ -9,8 +9,12 @@ import TranstionHistoryCategories from './TranstionHistoryCategories';
 import DateRangeModal from './DateRangeModal';
 import { AppContext } from '../../context/AppContext';
 import { rw, rh, rf } from '../../themes/responsive';
+import { useNavigation, useRoute } from '@react-navigation/native';
+
 
 const TransactionHistory = () => {
+        const navigation = useNavigation();
+    
     const { theme } = useTheme();
     const [isSheetVisible, setSheetVisible] = useState(false);
     const [activeTab, setActiveTab] = useState('Transaction');
@@ -81,6 +85,14 @@ const TransactionHistory = () => {
         }
     };
 
+    const addTranstion = ()=>{
+        navigation.navigate('AddTransaction');
+        dispatch({ type: 'SET_WALLET', payload: { walletId: null, walletName: null, walletImage: null } });
+        dispatch({ type: 'SET_CATEGORY', payload: { categoryId: null, categoryName: null, categoryImage: null } });
+        dispatch({  type: 'TRANSCTION_DATA',  payload: { transactionId: null, transactionAmount: null, transactionNote: null, transactionDate: null } });
+        dispatch({ type: 'SET_CATEGORY_SELECT_TYPE', payload: null });
+    }
+
     return (
         <View style={[styles.container, { backgroundColor: theme.primary }]}>
             {/* Button to open the bottom sheet */}
@@ -149,6 +161,18 @@ const TransactionHistory = () => {
 
             {/* Date Selection Modal */}
             <DateRangeModal isVisible={isDateModalVisible} onClose={closeDateModal} />
+
+             
+            <View style={{position:"absolute", bottom:rh(4), right:rw(10), width:rw(10)}}>
+                <TouchableOpacity onPress={addTranstion} style={{width:rw(13),  height:rw(13), justifyContent:"center", alignItems:"center", borderWidth:1, borderColor:theme.border, borderRadius:10}}>
+                        <MaterialIcons
+                          color={theme.text}
+                          name="add"
+                          size={rf(5)}
+                        />
+                </TouchableOpacity>
+            </View>
+
         </View>
     );
 };

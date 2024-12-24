@@ -40,6 +40,7 @@ const AllIcons = () => {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertType, setAlertType] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Function to fetch icons
   const fetchIconData = async () => {
@@ -212,12 +213,15 @@ const AllIcons = () => {
         <Portal>
           <Modal className="m-4 p-4" visible={visible} onDismiss={hideModal} contentContainerStyle={{backgroundColor:theme.secondary, borderRadius:10}}>
             <View className="items-center p-3 justify-center" style={{backgroundColor:theme.primary}}>
+              <View className="p-1" style={{borderWidth:1, borderColor:theme.border, borderRadius:10, backgroundColor:theme.secondary}}>
               <Image
                 className="shadow-md rounded-md"
                 source={{ uri: SelectedImage }}
                 style={{ width: 100, height: 100 }}
               />
-              <Text className="mt-2">{SelectedName}</Text>
+              </View>
+
+              <Text className="mt-2" style={{color:theme.subtext}}>{SelectedName}</Text>
             </View>
             <Button className="m-2 py-1 rounded-md" onPress={handleUpdate} style={{borderWidth:1, borderColor:theme.border}}>Update</Button>
             <Button className="m-2 py-1 rounded-md" onPress={() => setModalVisible(true)} style={{borderWidth:1, borderColor:theme.border}}>Delete</Button>

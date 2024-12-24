@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Image, TouchableOpacity } from 'react-native';
 import Dashboard from '../screens/DashboardScreen';
 import Wallet from '../screens/Wallet/MyWalletScreen';
-import { Alert, TouchableOpacity } from 'react-native';
 import TransactionHistory from '../screens/Transaction/TransactionHistory';
 import AddTransaction from '../screens/Transaction/AddTransaction';
 import Budgets from '../screens/Budgets/budgets';
@@ -16,10 +15,18 @@ import { rw, rh, rf } from '../themes/responsive';
 
 const Tab = createBottomTabNavigator();
 
-// Custom tab icon component
-const CustomTabIcon = ({ name, focused, color, type = 'MaterialCommunityIcons' }) => {
-  const IconComponent = type === 'MaterialIcons' ? MaterialIcons : MaterialCommunityIcons;
-  return <IconComponent name={name} color={color} size={rw(7)} />; // Icon size is now responsive
+// Custom tab image component
+const CustomTabImage = ({ focused, imagePathFill, imagePathOutline }) => {
+  return (
+    <Image
+      source={focused ? imagePathFill : imagePathOutline}
+      style={{
+        width: rw(7),
+        height: rw(7),
+        resizeMode: 'contain',
+      }}
+    />
+  );
 };
 
 // Function to control the visibility of the tab bar
@@ -38,23 +45,27 @@ const BottomNavigator = ({ route }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color }) => {
-          let iconName;
-          let iconType = 'MaterialCommunityIcons';
+        tabBarIcon: ({ focused }) => {
+          let imagePathFill, imagePathOutline;
 
           if (route.name === 'Home') {
-            iconName = focused ? 'view-dashboard' : 'view-dashboard-outline';
+            imagePathFill = require('../../assets/navigation-Icon/dashboard-fill.png');
+            imagePathOutline = require('../../assets/navigation-Icon/dashboard-outline.png');
           } else if (route.name === 'Transactions') {
-            iconName = focused ? 'wallet' : 'wallet-outline';
+            imagePathFill = require('../../assets/navigation-Icon/wallet-fill.png');
+            imagePathOutline = require('../../assets/navigation-Icon/wallet-outline.png');
           } else if (route.name === 'AddTransactions') {
-            iconName = focused ? 'plus-circle' : 'plus-circle-outline';
+            imagePathFill = require('../../assets/navigation-Icon/add-fill.png');
+            imagePathOutline = require('../../assets/navigation-Icon/add-outline.png');
           } else if (route.name === 'Budgets') {
-            iconName = focused ? 'calendar' : 'calendar-blank-outline';
+            imagePathFill = require('../../assets/navigation-Icon/user-fill.png');
+            imagePathOutline = require('../../assets/navigation-Icon/user-outline.png');
           } else if (route.name === 'Account') {
-            iconName = focused ? 'account-settings' : 'account-settings-outline';
+            imagePathFill = require('../../assets/navigation-Icon/user-fill.png');
+            imagePathOutline = require('../../assets/navigation-Icon/user-outline.png');
           }
 
-          return <CustomTabIcon name={iconName} focused={focused} color={color} type={iconType} />;
+          return <CustomTabImage focused={focused} imagePathFill={imagePathFill} imagePathOutline={imagePathOutline} />;
         },
         tabBarActiveTintColor: theme.accent,
         tabBarInactiveTintColor: theme.text,
@@ -66,23 +77,13 @@ const BottomNavigator = ({ route }) => {
           borderTopWidth: 0,
           paddingBottom: rh(1),
         },
-        tabBarLabelStyle: { 
+        tabBarLabelStyle: {
           fontSize: rf(1.5), // Responsive font size for label
           paddingBottom: rh(1.5), // Adjusted padding for label space
-          fontWeight: 'bold', 
+          fontWeight: 'bold',
           textAlign: 'center', // Ensures label is centered below the icon
         },
         headerShown: false,
-        headerStyle: {
-          backgroundColor: theme.secondary,
-          shadowColor: 'transparent',
-        },
-        headerTintColor: 'red',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-          color: theme.accent,
-          textTransform: 'uppercase',
-        },
       })}
     >
       <Tab.Screen 
@@ -90,7 +91,7 @@ const BottomNavigator = ({ route }) => {
         component={Dashboard} 
         options={{
           title: 'Dashboard', 
-          tabBarLabel: 'Dash',
+          tabBarLabel: 'Dashboard',
         }} 
       />
       <Tab.Screen 
@@ -98,10 +99,10 @@ const BottomNavigator = ({ route }) => {
         component={TransactionHistory} 
         options={{
           title: 'Transactions History', 
-          tabBarLabel: 'Tx History',
+          tabBarLabel: 'Transition',
         }} 
       />
-      <Tab.Screen 
+      {/* <Tab.Screen 
         name="AddTransactions" 
         component={AddTransaction} 
         options={{
@@ -120,15 +121,15 @@ const BottomNavigator = ({ route }) => {
             />
           ),
         }} 
-      />
-      <Tab.Screen 
+      /> */}
+      {/* <Tab.Screen 
         name="Budgets" 
         component={Budgets} 
         options={{
           title: 'Budgets', 
           tabBarLabel: 'Budgets',
         }} 
-      />
+      /> */}
       <Tab.Screen 
         name="Account" 
         component={Account} 

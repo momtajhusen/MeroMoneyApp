@@ -42,6 +42,7 @@ import PasswordChangeSucess from '../screens/Auth/Forget/PasswordChangeSucess';
 import PrivacyPolicyScreen from '../screens/Auth/PrivacyPolicyScreen';
 import TermsAndConditionsScreen from '../screens/Auth/TermsAndConditionsScreen';
 import OldPasswordChange from '../screens/Auth/Forget/OldPasswordChange';
+import AddTransaction from '../screens/Transaction/AddTransaction';
 import { rw, rh, rf } from '../themes/responsive';
 
 const Stack = createNativeStackNavigator();
@@ -95,6 +96,7 @@ const StackNavigation = () => {
           headerTitle: () => <HeaderTitle />,
         }} />
       <Stack.Screen name="BottomNavigator" component={BottomNavigator} options={{ headerShown: false }} />
+      <Stack.Screen name="AddTransaction" component={AddTransaction} options={{ title: 'Add Transaction'  }} />
       <Stack.Screen name="Wallet" component={Wallet} options={{ title: 'My Wallets' }} />
       <Stack.Screen name="SelectWallet" component={SelectWallet} options={{ title: 'Select Wallet' }} />
       <Stack.Screen name="AddWallets" component={AddWallets} options={{ title: 'Add Wallets' }} />
