@@ -140,7 +140,7 @@ const AddTransaction = () => {
       <Animated.View style={{ transform: [{ translateX: categoryShake }] }}>
         <CategorySelector
           onPress={() => {
-            dispatch({ type: 'SET_CATEGORY_NAVIGATION', payload: 'AddTransactions' });
+            dispatch({ type: 'SET_CATEGORY_NAVIGATION', payload: 'AddTransaction' });
             navigation.navigate('Categories');
           }}
           categoryImage={state.categoryIcon}

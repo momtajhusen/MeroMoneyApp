@@ -92,12 +92,12 @@ const Login = () => {
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={[styles.container, { backgroundColor: theme.primary }]}>
-        <View style={styles.imageContainer}>
+        {/* <View style={styles.imageContainer}>
           <Image
             source={require('../../../assets/authImages/login.png')}
             style={{ width: rw(55), height: rh(30), resizeMode: 'contain' }}
           />
-        </View>
+        </View> */}
 
         <Text style={[styles.title, { color: theme.text }]}>Account Login</Text>
 
@@ -175,6 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: rw(4),
+    justifyContent:"center"
   },
   imageContainer: {
     alignItems: 'center',

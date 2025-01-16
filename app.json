@@ -5,23 +5,17 @@
     "version": "1.0.0",
     "extra": {
       "eas": {
-        "projectId": "5ab0cdbf-1ae3-41be-957c-c1ac2893fb49"
+        "projectId": "cec4be90-7731-4d29-9042-1a2fe80cc445"
       }
     },
     "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/5ab0cdbf-1ae3-41be-957c-c1ac2893fb49"
+      "url": "https://u.expo.dev/cec4be90-7731-4d29-9042-1a2fe80cc445"
     },
     "android": {
       "package": "com.scriptqubeofficial.meromoney"
     },
     "ios": {},
-    "splash": {
-      "image": "",
-      "backgroundColor": "#ffffff",  
-      "resizeMode": "contain",
-      "disable": true
-    },
     "newArchEnabled": true
   }
 }

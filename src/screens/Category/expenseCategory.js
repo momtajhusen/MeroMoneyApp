@@ -183,7 +183,7 @@ const ExpenseCategory = () => {
       <FlatList
         data={parentCategories}
         renderItem={renderCategories}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         ListEmptyComponent={<Text className="text-center" style={{ color: theme.text }}>No categories available</Text>}
       />
 

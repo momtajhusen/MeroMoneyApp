@@ -78,6 +78,10 @@ const UpdateTransaction = () => {
     try {
       setIsLoading(true);
       const response = await apiClient.put(`/transactions/${state.transactionId}`, payload);
+
+      console.log(response.data);
+      // return false;
+
       if (response.status === 200) {
         setAlertMessage('Transaction updated successfully.');
         setAlertType('success');

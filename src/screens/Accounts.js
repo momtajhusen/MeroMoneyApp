@@ -19,8 +19,10 @@ const Account = () => {
    const handleLogout = async () => {
       try {
          await AsyncStorage.removeItem('authToken');
+         await AsyncStorage.removeItem('hasSeenIntro');
+
          dispatch({ type: 'RESET_STATE' });
-         navigation.replace('Hello');
+         navigation.replace('IntroScreen');
          setModalVisible(false); // Close the modal after logging out
       } catch (error) {
          console.log('Error removing authToken:', error);
