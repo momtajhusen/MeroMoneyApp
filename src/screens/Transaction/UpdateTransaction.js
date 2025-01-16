@@ -87,6 +87,7 @@ const UpdateTransaction = () => {
         setAlertType('success');
         setAlertVisible(true);
         dispatch({ type: 'RESET_TRANSACTION' }); 
+        dispatch({ type: 'GLOBAL_REFRESH', payload: Math.random() })
         setTimeout(() => {
           navigation.navigate('Transactions');
         }, 2000);
