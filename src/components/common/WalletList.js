@@ -9,7 +9,7 @@ import { rw, rh, rf } from '../../themes/responsive';
 
 
 
-const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressDelete, onPressEdit }) => {
+const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressTransfer, onPressDelete, onPressEdit }) => {
   const { state } = useContext(AppContext);
   const { theme } = useTheme();
 
@@ -45,6 +45,9 @@ const WalletList = ({ rightIcon, imageIcon, title, balance, onPress, onPressDele
                 />
               </MenuTrigger>
               <MenuOptions style={{ backgroundColor: theme.secondary, borderWidth:0.5, borderColor:theme.border}}>
+                <MenuOption onSelect={onPressTransfer} style={{ padding: 10,  borderBottomWidth:0.5, borderColor:theme.border}}>
+                  <Text style={{ color: theme.text, paddingVertical:5, textAlign:"center"}}>Transfer</Text>
+                </MenuOption>
                 <MenuOption onSelect={onPressEdit} style={{ padding: 10,  borderBottomWidth:0.5, borderColor:theme.border}}>
                   <Text style={{ color: theme.text, paddingVertical:5, textAlign:"center"}}>Update</Text>
                 </MenuOption>

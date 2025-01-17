@@ -8,6 +8,7 @@ import { AppContext } from '../../context/AppContext';
 import { useTheme } from '../../themes/ThemeContext';
 import CustomAlert from '../../components/common/CustomAlert';
 
+
 const Wallet = () => {
   const navigation = useNavigation();
   const { state, dispatch } = useContext(AppContext);
@@ -58,6 +59,12 @@ const Wallet = () => {
       setWalletToDelete(null);
     }
   };
+
+  const onPressTransfer = async () => {
+    navigation.navigate('BalanceTransfer');
+};
+
+
 
   const onPressEdit = (wallet) => {
     console.log("Hello");
@@ -110,6 +117,7 @@ const Wallet = () => {
             onPress={() => console.log(`${wallet.name} pressed!`)}
             onPressDelete={() => onPressDelete(wallet.id)}
             onPressEdit={() => onPressEdit(wallet)}
+            onPressTransfer={() => onPressTransfer(wallet)}
             rightIcon={true}
           />
         );

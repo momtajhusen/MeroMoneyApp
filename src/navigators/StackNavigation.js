@@ -44,6 +44,7 @@ import TermsAndConditionsScreen from '../screens/Auth/TermsAndConditionsScreen';
 import OldPasswordChange from '../screens/Auth/Forget/OldPasswordChange';
 import AddTransaction from '../screens/Transaction/AddTransaction';
 import { rw, rh, rf } from '../themes/responsive';
+import BalanceTransfer from '../screens/Wallet/BalanceTransfer';
 
 const Stack = createNativeStackNavigator();
 
@@ -119,6 +120,9 @@ const StackNavigation = () => {
       <Stack.Screen name="Settings" component={Settings} options={{ title: 'Update Transaction' }} />
       <Stack.Screen name="ThemesSelect" component={ThemsSelect} options={{ title: 'Themes' }} />
       <Stack.Screen name="Notification" component={Notification} options={{ title: 'Notifications' }} />  
+      <Stack.Screen name="BalanceTransfer" component={BalanceTransfer} options={{ title: 'Balance Transfer' }} />  
+
+      
     </Stack.Navigator>
   );
 };
