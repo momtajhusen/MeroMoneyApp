@@ -104,7 +104,7 @@ const AddTransaction = () => {
         setTransactionAmount(null);
         dispatch({ type: 'SET_CATEGORY', payload: { categoryId: null, categoryName: null, categoryImage: null } });
         dispatch({ type: 'TRANSCTION_NOTE', payload: null });
-        dispatch({ type: 'SET_WALLET', payload: { walletId: null, walletName: null } });
+        // dispatch({ type: 'SET_WALLET', payload: { walletId: null, walletName: null } });
         dispatch({ type: 'GLOBAL_REFRESH', payload: Math.random() });
         setTimeout(() => {
           setAlertVisible(false);
