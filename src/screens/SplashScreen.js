@@ -27,6 +27,9 @@ const Splash = () => {
         const hasSeenIntro = await AsyncStorage.getItem('hasSeenIntro');
         if (hasSeenIntro === 'true') {
           const token = await AsyncStorage.getItem('authToken');
+          console.log('token');
+          console.log(token);
+          console.log('token');
           if (token) {
             const response = await apiClient.get('/verify-token', {
               headers: { Authorization: `Bearer ${token}` },
