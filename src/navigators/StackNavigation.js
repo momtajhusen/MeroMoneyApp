@@ -45,6 +45,7 @@ import OldPasswordChange from '../screens/Auth/Forget/OldPasswordChange';
 import AddTransaction from '../screens/Transaction/AddTransaction';
 import { rw, rh, rf } from '../themes/responsive';
 import BalanceTransfer from '../screens/Wallet/BalanceTransfer';
+import BalanceAdjustment from '../screens/Wallet/BalanceAdjustment';
 
 const Stack = createNativeStackNavigator();
 
@@ -121,6 +122,10 @@ const StackNavigation = () => {
       <Stack.Screen name="ThemesSelect" component={ThemsSelect} options={{ title: 'Themes' }} />
       <Stack.Screen name="Notification" component={Notification} options={{ title: 'Notifications' }} />  
       <Stack.Screen name="BalanceTransfer" component={BalanceTransfer} options={{ title: 'Balance Transfer' }} />  
+      <Stack.Screen name="BalanceAdjustment" component={BalanceAdjustment} options={{ title: 'Balance Adjustment' }} />  
+
+
+      
 
       
     </Stack.Navigator>

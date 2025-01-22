@@ -62,9 +62,11 @@ const Wallet = () => {
 
   const onPressTransfer = async () => {
     navigation.navigate('BalanceTransfer');
-};
+  };
 
-
+  const onPressAdjustment = async () => {
+    navigation.navigate('BalanceAdjustment');
+  };
 
   const onPressEdit = (wallet) => {
     console.log("Hello");
@@ -100,75 +102,75 @@ const Wallet = () => {
   };
 
   return (
-<View style={[styles.container, { padding: 8, backgroundColor: theme.primary }]}>
-  <View style={{ flex: 1 }}>
-    {walletData.length > 0 ? (
-      walletData.map((wallet) => {
-        // Format the balance
-        const formattedBalance = parseFloat(wallet.balance).toFixed(2);
-        const displayBalance = formattedBalance.endsWith('.00') ? parseInt(formattedBalance).toString() : formattedBalance;
+    <View style={[styles.container, { padding: 8, backgroundColor: theme.primary }]}>
+      <View style={{ flex: 1 }}>
+        {walletData.length > 0 ? (
+          walletData.map((wallet) => {
+            // Format the balance
+            const formattedBalance = parseFloat(wallet.balance).toFixed(2);
+            const displayBalance = formattedBalance.endsWith('.00') ? parseInt(formattedBalance).toString() : formattedBalance;
 
-        return (
-          <WalletList
-            key={wallet.id}
-            imageIcon={`${BASE_URL}${wallet.icon_path}`}
-            title={wallet.name}
-            balance={`${wallet.currency_symbols} ${displayBalance}`} 
-            onPress={() => console.log(`${wallet.name} pressed!`)}
-            onPressDelete={() => onPressDelete(wallet.id)}
-            onPressEdit={() => onPressEdit(wallet)}
-            onPressTransfer={() => onPressTransfer(wallet)}
-            rightIcon={true}
-          />
-        );
-      })
-    ) : (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 4 }}>
-        <Text style={{ color: theme.text }}>No wallet data available.</Text>
+            return (
+              <WalletList
+                key={wallet.id}
+                imageIcon={`${BASE_URL}${wallet.icon_path}`}
+                title={wallet.name}
+                balance={`${wallet.currency_symbols} ${displayBalance}`} 
+                onPress={() => console.log(`${wallet.name} pressed!`)}
+                onPressDelete={() => onPressDelete(wallet.id)}
+                onPressEdit={() => onPressEdit(wallet)}
+                onPressTransfer={() => onPressTransfer(wallet)}
+                onPressAdjustment={() => onPressAdjustment(wallet)}
+                rightIcon={true}
+              />
+            );
+          })
+        ) : (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 4 }}>
+            <Text style={{ color: theme.text }}>No wallet data available.</Text>
+          </View>
+        )}
       </View>
-    )}
-  </View>
 
-  <View style={styles.iconContainer}>
-    <TouchableHighlight
-      onPress={AddWalletsNavigation}
-      style={{ borderRadius: 100, borderWidth: 1, borderColor: theme.accent, padding: 8 }}
-      underlayColor="rgba(0,0,0,0.1)"
-    >
-      <MaterialIcons
-        name="add"
-        size={30}
-        color={theme.accent}
+      <View style={styles.iconContainer}>
+        <TouchableHighlight
+          onPress={AddWalletsNavigation}
+          style={{ borderRadius: 100, borderWidth: 1, borderColor: theme.accent, padding: 8 }}
+          underlayColor="rgba(0,0,0,0.1)"
+        >
+          <MaterialIcons
+            name="add"
+            size={30}
+            color={theme.accent}
+          />
+        </TouchableHighlight>
+      </View>
+
+      {/* CustomAlert for delete confirmation */}
+      <CustomAlert
+        visible={isModalVisible}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this wallet?"
+        confirmText="Delete"
+        onCancel={() => setModalVisible(false)}
+        onConfirm={handleDelete}
+        theme={theme}
+        type='warning'
       />
-    </TouchableHighlight>
-  </View>
 
-  {/* CustomAlert for delete confirmation */}
-  <CustomAlert
-    visible={isModalVisible}
-    title="Confirm Delete"
-    message="Are you sure you want to delete this wallet?"
-    confirmText="Delete"
-    onCancel={() => setModalVisible(false)}
-    onConfirm={handleDelete}
-    theme={theme}
-    type='warning'
-  />
-
-  {/* CustomAlert for success/error messages */}
-  <CustomAlert
-    visible={alertVisible}
-    title={alertType === 'success' ? "Success" : "Error"}
-    message={alertMessage}
-    confirmText="OK"
-    onOk={() => setAlertVisible(false)}
-    theme={theme}
-    type={alertType}
-  />
-</View>
-
-  );
-};
+      {/* CustomAlert for success/error messages */}
+      <CustomAlert
+        visible={alertVisible}
+        title={alertType === 'success' ? "Success" : "Error"}
+        message={alertMessage}
+        confirmText="OK"
+        onOk={() => setAlertVisible(false)}
+        theme={theme}
+        type={alertType}
+      />
+    </View>
+   );
+  };
 
 const styles = StyleSheet.create({
   container: {

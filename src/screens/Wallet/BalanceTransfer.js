@@ -108,6 +108,7 @@ const BalanceTransfer = ({navigation}) => {
     try {
       const response = await apiClient.post('/wallets/transfer', payload);
   
+      console.log(response.data);
       Alert.alert('Success', response.data.message);
       setTransactionAmount('');
       setSelectedDate(new Date());
@@ -119,6 +120,7 @@ const BalanceTransfer = ({navigation}) => {
       if (error.response?.data?.errors?.date) {
         Alert.alert('Error', error.response.data.errors.date[0]);
       } else {
+        console.log(error.response.data);
         Alert.alert('Error', 'Failed to transfer balance. Please try again.');
       }
     } finally {
