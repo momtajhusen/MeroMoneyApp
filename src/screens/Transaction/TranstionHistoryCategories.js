@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { View, Text, FlatList, RefreshControl, Image,TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, RefreshControl, Image, TouchableOpacity } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import apiClient from '../../../apiClient';
@@ -7,9 +7,7 @@ import { useTheme } from '../../themes/ThemeContext';
 import { AppContext } from '../../context/AppContext';
 import { MaterialIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {format, startOfMonth,endOfMonth} from 'date-fns';
-import { rw, rh, rf } from '../../themes/responsive';
-
+import { startOfMonth, endOfMonth } from 'date-fns';
 
 const BASE_URL = 'https://finance.scriptqube.com/storage/';
 
@@ -24,6 +22,7 @@ const TransactionHistoryCategories = () => {
     const [totalExpense, setTotalExpense] = useState(0);
     const [totalTransactions, setTotalTransactions] = useState(0);
     const [dateRange, setDateRange] = useState(null);
+    const [expandedCategories, setExpandedCategories] = useState({});
 
     const { state, dispatch } = useContext(AppContext);
     const { transactionFilter } = state;
@@ -32,200 +31,74 @@ const TransactionHistoryCategories = () => {
     const fetchTransactionData = async () => {
         try {
             setIsLoading(true);
-            // Retrieve the stored transaction dates
             const storedDates = await AsyncStorage.getItem('transaction_dates');
             const parsedDates = storedDates ? JSON.parse(storedDates) : {};
-
-            // Set default start and end dates if not found in parsedDates
             const start_date = parsedDates.start_date || startOfMonth(new Date());
             const end_date = parsedDates.end_date || endOfMonth(new Date());
-
-            // Retrieve the DateClickButton value, set default if null or key not found
             const DateClickButton = await AsyncStorage.getItem('DateClickButton') || 'This Month';
 
             const response = await apiClient.get('/transactions-category', {
-                params: {
-                    start_date: start_date,
-                    end_date: end_date,
-                }
+                params: { start_date, end_date },
             });
 
-            const filteredData = applyFilters(response.data); // Apply filters on fetched data
+            const filteredData = applyFilters(response.data);
             setTransactionData(filteredData);
 
-            // Calculate total income and expenses
-            const income = filteredData.reduce((sum, category) => {
-                return sum + category.transactions.reduce((catSum, transaction) => {
-                    return transaction.transaction_type === 'Income' ? catSum + parseFloat(transaction.amount) : catSum;
-                }, 0);
-            }, 0);
+            const income = filteredData.reduce((sum, category) => (
+                sum + category.transactions.reduce((catSum, transaction) => (
+                    transaction.transaction_type === 'Income' ? catSum + parseFloat(transaction.amount) : catSum
+                ), 0)
+            ), 0);
 
-            const expense = filteredData.reduce((sum, category) => {
-                return sum + category.transactions.reduce((catSum, transaction) => {
-                    return transaction.transaction_type === 'Expense' ? catSum + parseFloat(transaction.amount) : catSum;
-                }, 0);
-            }, 0);
+            const expense = filteredData.reduce((sum, category) => (
+                sum + category.transactions.reduce((catSum, transaction) => (
+                    transaction.transaction_type === 'Expense' ? catSum + parseFloat(transaction.amount) : catSum
+                ), 0)
+            ), 0);
 
             setTotalIncome(income);
             setTotalExpense(expense);
             setDateRange(DateClickButton);
 
-            // Calculate total transactions
             const totalTrans = filteredData.reduce((total, category) => total + category.total_count, 0);
-            setTotalTransactions(totalTrans); 
-
- 
-
+            setTotalTransactions(totalTrans);
         } catch (error) {
             console.error('Error fetching data:', error.response ? error.response.data : error.message);
         } finally {
             setIsRefreshing(false);
             setIsLoading(false);
-
         }
     };
 
-    // Apply filters based on transactionFilter state
-// Apply filters based on transactionFilter state
-const applyFilters = (categories) => {
-    return categories.map((category) => {
-        const filteredTransactions = category.transactions.filter((transaction) =>
-            // Amount filter
-            (transactionFilter.amountFilterType === 'All' ||
-                (transactionFilter.amountFilterType === 'Over' && parseFloat(transaction.amount) > parseFloat(transactionFilter.amount.min)) ||
-                (transactionFilter.amountFilterType === 'Under' && parseFloat(transaction.amount) < parseFloat(transactionFilter.amount.max)) ||
-                (transactionFilter.amountFilterType === 'Between' &&
-                    parseFloat(transaction.amount) >= parseFloat(transactionFilter.amount.min) &&
-                    parseFloat(transaction.amount) <= parseFloat(transactionFilter.amount.max)) ||
-                (transactionFilter.amountFilterType === 'Exact' && parseFloat(transaction.amount) === parseFloat(transactionFilter.amount.exact))
-            ) &&
-            // Wallet filter
-            (transactionFilter.walletFilterType === 'All' || transaction.wallets_name === transactionFilter.walletFilterType) &&
-            // Transaction Type filter
-            (transactionFilter.transactionType === 'All' || transaction.transaction_type === transactionFilter.transactionType) &&
-            // Note filter
-            (!transactionFilter.note || (transaction.note && transaction.note.toLowerCase().includes(transactionFilter.note.toLowerCase())))
-        );
+    const applyFilters = (categories) => {
+        return categories.map((category) => {
+            const filteredTransactions = category.transactions.filter((transaction) =>
+                (transactionFilter.amountFilterType === 'All' ||
+                    (transactionFilter.amountFilterType === 'Over' && parseFloat(transaction.amount) > parseFloat(transactionFilter.amount.min)) ||
+                    (transactionFilter.amountFilterType === 'Under' && parseFloat(transaction.amount) < parseFloat(transactionFilter.amount.max)) ||
+                    (transactionFilter.amountFilterType === 'Between' &&
+                        parseFloat(transaction.amount) >= parseFloat(transactionFilter.amount.min) &&
+                        parseFloat(transaction.amount) <= parseFloat(transactionFilter.amount.max)) ||
+                    (transactionFilter.amountFilterType === 'Exact' && parseFloat(transaction.amount) === parseFloat(transactionFilter.amount.exact))) &&
+                (transactionFilter.walletFilterType === 'All' || transaction.wallets_name === transactionFilter.walletFilterType) &&
+                (transactionFilter.transactionType === 'All' || transaction.transaction_type === transactionFilter.transactionType) &&
+                (!transactionFilter.note || (transaction.note && transaction.note.toLowerCase().includes(transactionFilter.note.toLowerCase())))
+            );
 
-        // If no transactions match the filter, exclude the category
-        if (filteredTransactions.length === 0) {
-            return null;
-        }
+            if (filteredTransactions.length === 0) {
+                return null;
+            }
 
-        // Return category with filtered transactions
-        return {
-            ...category,
-            transactions: filteredTransactions,
-            total_count: filteredTransactions.length,
-            total_amount: filteredTransactions.reduce((sum, transaction) => sum + parseFloat(transaction.amount), 0)
-        };
-    }).filter(category => category !== null); // Remove null entries where categories were filtered out
-};
-
-
-    useEffect(() => {
-        fetchTransactionData();
-    }, [transactionFilter, state.dateRangeApply, state.reFresh]);
-
-    const onRefresh = () => {
-        setIsRefreshing(true);
-        fetchTransactionData();
+            return {
+                ...category,
+                transactions: filteredTransactions,
+                total_count: filteredTransactions.length,
+                total_amount: filteredTransactions.reduce((sum, transaction) => sum + parseFloat(transaction.amount), 0),
+            };
+        }).filter(category => category !== null);
     };
 
-    const handleItemClick = (transaction) => {
-        navigation.navigate('ViewTransaction', { data: transaction });
-    };
-
-    const renderTransactionItem = useCallback(({ item }) => {
-        const note = item.note ? item.note : '';
-        const truncatedNote = note.length > 20 ? `${note.substring(0, 20)} ...` : note;
-        const amountTextColor = item.transaction_type === 'Expense' ? '#b02305' : '#169709';
-        
-        const transactionDate = new Date(item.transaction_date);
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 1);
-        
-        const isToday = transactionDate.toDateString() === today.toDateString();
-        const isYesterday = transactionDate.toDateString() === yesterday.toDateString();
-        
-        let formattedDate;
-        if (isToday) {
-            formattedDate = 'Today';
-        } else if (isYesterday) {
-            formattedDate = 'Yesterday';
-        } else {
-            const options = { day: '2-digit', month: 'short', year: 'numeric' };
-            formattedDate = transactionDate.toLocaleDateString('en-IN', options);
-        }
-
-        const formattedAmount = parseFloat(item.amount) % 1 === 0
-            ? parseInt(item.amount).toString()
-            : parseFloat(item.amount).toFixed(2);
-
-        return (
-            <TouchableRipple
-                onPress={() => handleItemClick(item)}
-                rippleColor="rgba(0, 0, 0, .32)"
-                style={{ backgroundColor: theme.secondary }}
-                key={item.id}
-                className="mb-0.5 pb-1"
-            >
-                <View className="px-2" style={styles.itemContent}>
-                    <View style={styles.itemLeft}>
-                            <View>
-                                <Image source={{ uri: `${BASE_URL}${item.categories_icon}` }} style={styles.categoryIcon} />
-                                <View style={styles.walletIconContainer}>
-                                    <Image source={{ uri: `${BASE_URL}${item.wallets_icon}` }} style={styles.walletIcon} />
-                                </View>
-                            </View>
-                            <View className="pl-3">
-                            <Text className="font-bold" style={{ color: theme.text }}>
-                                {item.transaction_category_name}
-                            </Text>
-                            {truncatedNote && truncatedNote.trim() !== '' ? ( // Check if truncatedNote is not null or an empty string
-                                <Text style={{ color: theme.subtext }}>{truncatedNote}</Text>
-                            ) : null}  
-                        </View>
-                    </View>
-                    <View>
-                        <Text style={[styles.amount, { color: amountTextColor }]}>{item.currency_symbols} {formattedAmount}</Text>
-                        <Text className="text-center" style={{ color: theme.subtext }}>{formattedDate}</Text>
-                    </View>
-                </View>
-            </TouchableRipple>
-        );
-    }, [theme]);
     
-
-    const renderParentCategory = useCallback(({ item }) => {
-        const formattedTotalAmount = parseFloat(item.total_amount) % 1 === 0
-            ? parseInt(item.total_amount).toString()
-            : parseFloat(item.total_amount).toFixed(2);
-    
-        return (
-            <View className="p-2 pb-0" style={[styles.parentCategoryContainer, { backgroundColor: theme.secondary  }]} key={item.parent_category_name}>
-                <View className="flex-row justify-between pb-1" style={{borderBottomWidth:1, borderColor:theme.border}}>
-                    <View className="flex-row space-x-2">
-                        <Image source={{ uri: `${BASE_URL}${item.parent_icon}` }} style={styles.parentIcon} />
-                        <View>
-                            <Text style={[styles.parentCategoryName, { color: theme.text }]}>{item.parent_category_name}</Text>
-                            <Text style={[styles.parentCategoryName, { color: theme.text, fontSize: 12 }]}>
-                                Transactions: {item.total_count}
-                            </Text>
-                        </View>
-                    </View>
-                    <Text style={[styles.parentCategoryName, { color: theme.text }]}>{formattedTotalAmount}</Text>
-                </View>
-                <FlatList
-                    data={item.transactions}
-                    renderItem={renderTransactionItem}
-                    keyExtractor={(transaction) => transaction.id.toString()}
-                />
-            </View>
-        );
-    }, [theme, renderTransactionItem]);
-
     const handleRemoveFilter = (filterType) => {
         if (filterType === 'transactionType') {
             dispatch({
@@ -237,9 +110,9 @@ const applyFilters = (categories) => {
                 type: 'SET_WALLET_FILTER',
                 payload: {
                   walletFilterType: 'All',
-                  wallet: null,
+                  wallet: null, // or an empty string or the default wallet object if you want
                 },
-              });   
+              });              
         } else if (filterType === 'amount') {
             dispatch({
                 type: 'SET_AMOUNT_FILTER',
@@ -255,17 +128,117 @@ const applyFilters = (categories) => {
               });
         }
     };
-    
+
+    useEffect(() => {
+        fetchTransactionData();
+    }, [transactionFilter, state.dateRangeApply, state.reFresh]);
+
+    const onRefresh = () => {
+        setIsRefreshing(true);
+        fetchTransactionData();
+    };
+
+    const handleItemClick = (transaction) => {
+        navigation.navigate('ViewTransaction', { data: transaction });
+    };
+
+    const toggleCategory = (categoryName) => {
+        setExpandedCategories((prev) => ({
+            ...prev,
+            [categoryName]: !prev[categoryName],
+        }));
+    };
+
+    const renderTransactionItem = useCallback(({ item }) => {
+        const note = item.note ? item.note : '';
+        const truncatedNote = note.length > 20 ? `${note.substring(0, 20)} ...` : note;
+        const amountTextColor = item.transaction_type === 'Expense' ? '#b02305' : '#169709';
+
+        const transactionDate = new Date(item.transaction_date);
+        const formattedDate = transactionDate.toLocaleDateString('en-IN', {
+            day: '2-digit', month: 'short', year: 'numeric'
+        });
+
+        return (
+            <TouchableRipple
+                onPress={() => handleItemClick(item)}
+                rippleColor="rgba(0, 0, 0, .32)"
+                style={{ backgroundColor: theme.secondary }}
+                key={item.id}
+                className="mb-0.5 pb-1"
+            >
+                <View className="px-2" style={styles.itemContent}>
+                    <View style={styles.itemLeft}>
+                        <View>
+                            <Image source={{ uri: `${BASE_URL}${item.categories_icon}` }} style={styles.categoryIcon} />
+                            <View style={styles.walletIconContainer}>
+                                <Image source={{ uri: `${BASE_URL}${item.wallets_icon}` }} style={styles.walletIcon} />
+                            </View>
+                        </View>
+                        <View className="pl-3">
+                            <Text className="font-bold" style={{ color: theme.text }}>
+                                {item.transaction_category_name}
+                            </Text>
+                            {truncatedNote && (
+                                <Text style={{ color: theme.subtext }}>{truncatedNote}</Text>
+                            )}
+                        </View>
+                    </View>
+                    <View>
+                        <Text style={[styles.amount, { color: amountTextColor }]}>{item.currency_symbols} {item.amount}</Text>
+                        <Text className="text-center" style={{ color: theme.subtext }}>{formattedDate}</Text>
+                    </View>
+                </View>
+            </TouchableRipple>
+        );
+    }, [theme]);
+
+    const renderParentCategory = useCallback(({ item }) => {
+        console.log(item);
+        const isExpanded = expandedCategories[item.parent_category_name] || false;
+        const formattedTotalAmount = parseFloat(item.total_amount) % 1 === 0
+            ? parseInt(item.total_amount).toString()
+            : parseFloat(item.total_amount).toFixed(2);
+
+            const amountTextColor = item.transactions[0].transaction_type === 'Expense' ? '#b02305' : '#169709';
+
+        return (
+            <View className="p-2 pb-0" style={[styles.parentCategoryContainer, { backgroundColor: theme.secondary }]} key={item.parent_category_name}>
+                <TouchableOpacity className="flex-row justify-between pb-1" style={{ borderBottomWidth: 1, borderColor: theme.border }}>
+                    <TouchableOpacity onPress={() => toggleCategory(item.parent_category_name)} style={{gap:5, flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+                        <Image source={{ uri: `${BASE_URL}${item.parent_icon}` }} style={styles.parentIcon} />
+                        <View>
+                            <Text style={[styles.parentCategoryName, { color: theme.text }]}>{item.parent_category_name}</Text>
+                            <Text style={[styles.parentCategoryName, { color: theme.text, fontSize: 12 }]}>
+                                Transactions: {item.total_count}
+                            </Text>
+                        </View>
+                    </TouchableOpacity>
+                    <Text style={[styles.parentCategoryName, { color: amountTextColor }]}>{formattedTotalAmount}</Text>
+                    {/* <MaterialIcons
+                        name={isExpanded ? 'keyboard-arrow-up' : 'keyboard-arrow-down'}
+                        size={24}
+                        color={theme.text}
+                    /> */}
+                </TouchableOpacity>
+                {isExpanded && (
+                    <FlatList
+                        data={item.transactions}
+                        renderItem={renderTransactionItem}
+                        keyExtractor={(transaction) => transaction.id.toString()}
+                    />
+                )}
+            </View>
+        );
+    }, [expandedCategories, theme, renderTransactionItem]);
 
     return (
         <View className="px-3 flex-1">
-
-            {/* Filter Title show */}
+            {/* Filter Applied */}
             {(transactionFilter.walletFilterType !== 'All' || transactionFilter.transactionType !== 'All' || transactionFilter.amountFilterType !== 'All' || transactionFilter.note) && (
                 <View className="p-1 px-3 mt-1 flex-row space-x-2 items-center" style={{ backgroundColor: theme.secondary }}>
                     <Text style={{ color: theme.text }}>Filters Applied:</Text>
                     <View className="flex-row space-x-1">
-                        {/* Walets Filter */}
                         {transactionFilter.walletFilterType !== 'All' && (
                             <View className="p-2 px-2 flex-row space-x-2 items-center justify-center" style={{ backgroundColor: theme.primary, borderRadius: 10 }}>
                                 <Text style={{ color: theme.text }}>{transactionFilter.walletFilterType}</Text>
@@ -274,7 +247,6 @@ const applyFilters = (categories) => {
                                 </TouchableOpacity>
                             </View>
                         )}
-                        {/* Category Filter */}
                         {transactionFilter.transactionType !== 'All' && (
                             <View className="p-2 px-2 flex-row space-x-2 items-center justify-center" style={{ backgroundColor: theme.primary, borderRadius: 10 }}>
                                 <Text style={{ color: theme.text }}>{transactionFilter.transactionType}</Text>
@@ -283,7 +255,6 @@ const applyFilters = (categories) => {
                                 </TouchableOpacity>
                             </View>
                         )}
-                        {/* Amount Filter */}
                         {transactionFilter.amountFilterType !== 'All' && (
                             <View className="p-2 px-2 flex-row space-x-2 items-center justify-center" style={{ backgroundColor: theme.primary, borderRadius: 10 }}>
                                 <Text style={{ color: theme.text }}>{transactionFilter.amountFilterType}</Text>
@@ -292,7 +263,6 @@ const applyFilters = (categories) => {
                                 </TouchableOpacity>
                             </View>
                         )}
-                        {/* Note Filter */}
                         {transactionFilter.note && (
                             <View className="p-2 px-2 flex-row space-x-2 items-center justify-center" style={{ backgroundColor: theme.primary, borderRadius: 10 }}>
                                 <Text style={{ color: theme.text }}>{transactionFilter.note}</Text>
@@ -305,60 +275,36 @@ const applyFilters = (categories) => {
                 </View>
             )}
 
-            {/* Total Income and Expense Amount Show */}
+            {/* Date Range and Totals */}
             <View className="p-3 mt-1 flex-row justify-between items-center" style={{ backgroundColor: theme.secondary }}>
                 <View>
-                    <View className="flex-row items-center">
-                        <View>
-                            <Text style={{ color: theme.text}}>Date Range : {dateRange}</Text>
-                            <Text style={{ color: theme.text}}>Transactions : {totalTransactions}</Text>
-                        </View>
-                    </View>
+                    <Text style={{ color: theme.text }}>Date Range: {dateRange}</Text>
+                    <Text style={{ color: theme.text }}>Transactions: {totalTransactions}</Text>
                 </View>
                 <View>
-                    <View className="flex-row">
-                        <Text style={{ color:  '#169709', fontSize: 18 }}>Income : </Text>
-                        <Text style={{ color:  '#169709', fontSize: 18 }}>{totalIncome}</Text>
-                    </View>
-                    <View className="flex-row">
-                        <Text style={{ color:  '#b02305', fontSize: 18 }}>Expense : </Text>
-                        <Text style={{ color: '#b02305', fontSize: 18 }}>{totalExpense}</Text>
-                    </View>
+                    <Text style={{ color: '#169709', fontSize: 18 }}>Income: {totalIncome}</Text>
+                    <Text style={{ color: '#b02305', fontSize: 18 }}>Expense: {totalExpense}</Text>
                 </View>
             </View>
 
-
+            {/* Transaction Categories */}
             {transactionData.length === 0 && !isLoading ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: theme.subtext, fontSize: 16 }}>
-                        No transactions available.
-                    </Text>
-                    <Text style={{ color: theme.subtext, fontSize: 16 }}>
-                        {dateRange}
-                    </Text>
+                    <Text style={{ color: theme.subtext, fontSize: 16 }}>No transactions available.</Text>
+                    <Text style={{ color: theme.subtext, fontSize: 16 }}>{dateRange}</Text>
                 </View>
             ) : (
-            <FlatList
-                data={transactionData}
-                renderItem={renderParentCategory}
-                keyExtractor={(item) => item.parent_category_name}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={isRefreshing}
-                        onRefresh={onRefresh}
-                    />
-                }
-                className="mt-2"
-            />
-        )}
-
-
-
+                <FlatList
+                    data={transactionData}
+                    renderItem={renderParentCategory}
+                    keyExtractor={(item) => item.parent_category_name}
+                    refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={onRefresh} />}
+                />
+            )}
         </View>
     );
 };
 
-// Styles
 const styles = {
     itemContent: {
         flexDirection: 'row',
@@ -376,7 +322,7 @@ const styles = {
     categoryIcon: {
         width: 30,
         height: 30,
-        borderRadius:5
+        borderRadius: 5,
     },
     walletIconContainer: {
         position: 'absolute',
@@ -387,7 +333,7 @@ const styles = {
         padding: 2,
     },
     parentCategoryContainer: {
-        marginBottom: 10,
+        marginTop: 5,
         backgroundColor: '#f9f9f9',
         borderRadius: 5,
     },
@@ -407,4 +353,4 @@ const styles = {
     },
 };
 
-export default TransactionHistoryCategories
+export default TransactionHistoryCategories;

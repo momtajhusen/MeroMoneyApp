@@ -1,5 +1,5 @@
 import React, { useState, useContext, useCallback, useEffect } from 'react';
-import { View, Text, FlatList, RefreshControl, Image, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, FlatList, RefreshControl, Image, TouchableOpacity } from 'react-native';
 import { TouchableRipple } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import apiClient from '../../../apiClient';
@@ -34,9 +34,28 @@ const TransactionHistoryTransactions = () => {
     const [totalTransactions, setTotalTransactions] = useState(0);
     const [dateRange, setDateRange] = useState(null);
 
+    const [searchQuery, setSearchQuery] = useState('');
+    const [filteredData, setFilteredData] = useState([]);
+ 
+
 
     const { state, dispatch } = useContext(AppContext);
     const { transactionFilter } = state;
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    
+        if (query.trim() === '') {
+            setFilteredData(transactionData); // Reset filtered data
+        } else {
+            const filtered = transactionData.filter((item) => 
+                item.transaction_category_name.toLowerCase().includes(query.toLowerCase()) || 
+                (item.note && item.note.toLowerCase().includes(query.toLowerCase())) || 
+                item.amount.toString().includes(query)
+            );
+            setFilteredData(filtered);
+        }
+    };
 
     const fetchTransactionData = async () => {
         try {
@@ -93,6 +112,10 @@ const TransactionHistoryTransactions = () => {
           setIsLoading(false);
         }
       };
+
+      useEffect(() => {
+        setFilteredData(transactionData);
+    }, [transactionData]);
       
 
     const applyFilters = (transactions) => {
@@ -288,6 +311,29 @@ const TransactionHistoryTransactions = () => {
                 </View>
             </View>
 
+        {/* Search Input Toggle */}
+        {state.isSearchVisible && (
+                <View style={{ marginTop: 3, paddingHorizontal: 0 }}>
+                    <TextInput
+                        placeholder="Search Transactions"
+                        placeholderTextColor={theme.subtext}
+                        value={searchQuery}
+                        onChangeText={handleSearch}
+                        autoFocus={true}
+                        style={{
+                            backgroundColor: theme.secondary,
+                            borderRadius: 5,
+                            paddingHorizontal: 15,
+                            paddingVertical: 10,
+                            color: theme.text,
+                            borderWidth: 1,
+                            borderColor: theme.border,
+                        }}
+                    />
+                </View>
+        )}
+
+
             {/* FlatList for transactions */}
             {transactionData.length === 0 && !isLoading ? (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -300,7 +346,7 @@ const TransactionHistoryTransactions = () => {
                 </View>
             ) : (
                 <FlatList
-                    data={isLoading ? Array(20).fill({}) : transactionData} // Show placeholders while loading
+                   data={isLoading ? Array(20).fill({}) : filteredData} // Show placeholders while loading
                     renderItem={({ item, index }) =>
                         isLoading ? (
                             <View className="items-center p-1 flex-1" style={styles.itemContent}>

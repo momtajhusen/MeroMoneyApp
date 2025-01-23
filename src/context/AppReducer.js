@@ -26,6 +26,9 @@ const SET_DATE_RANGE = 'SET_DATE_RANGE';
 const GLOBAL_REFRESH = 'GLOBAL_REFRESH';
 const SET_CATEGORY_ICON = 'SET_CATEGORY_ICON';
 
+const SEARCH_VISIBLE = 'SEARCH_VISIBLE';
+
+
 
 
 // Reducer
@@ -131,6 +134,12 @@ export default (state, action) => {
           ...state,
           reFresh: action.payload,
         };
+
+        case SEARCH_VISIBLE:
+          return {
+            ...state,
+            isSearchVisible: action.payload,
+          };
 
     // Category Icon action
     case SET_CATEGORY_ICON:

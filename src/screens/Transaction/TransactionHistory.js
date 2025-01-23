@@ -77,12 +77,11 @@ const TransactionHistory = () => {
         setSearchInputVisible(false); // Hide search input when cleared
     };
 
-    // Function to toggle search input visibility
-    const toggleSearchInput = () => {
-        setSearchInputVisible(prevState => !prevState);
-        if (!isSearchInputVisible) {
-            setSearchText(''); // Clear search text when opening the input
-        }
+    const toggleSearch = () => {
+        dispatch({
+            type: 'SEARCH_VISIBLE',
+            payload: !state.isSearchVisible,
+        });
     };
 
     const addTranstion = ()=>{
@@ -98,6 +97,7 @@ const TransactionHistory = () => {
             {/* Button to open the bottom sheet */}
             <View style={[styles.tabContainer, { backgroundColor: theme.secondary }]}>
                 <View style={styles.tabsWrapper}>
+                    
                     <TouchableOpacity
                         onPress={() => handleTabChange('Transaction')}
                         style={[styles.tabButton, {
@@ -119,6 +119,14 @@ const TransactionHistory = () => {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.iconWrapper}>
+                {activeTab === 'Transaction' ? 
+                   <TouchableOpacity 
+                        onPress={toggleSearch}
+                        style={[styles.iconButton, { backgroundColor: theme.primary }]}
+                    >
+                        <MaterialIcons name={state.isSearchVisible ? 'close' : 'search'} size={24} color={theme.text} />
+                    </TouchableOpacity>
+                    : null}
                     <TouchableOpacity 
                         onPress={openDateModal} 
                         style={[styles.iconButton, { backgroundColor: theme.primary }]}

@@ -47,6 +47,9 @@ const initialState = {
   // Note
   reFresh: false,
 
+  // Search 
+  isSearchVisible: false,
+
   // Transaction Filter
   transactionFilter: {
     amountFilterType: 'All', // Filter type for amount: 'All', 'Over', 'Under', 'Between', 'Exact'
