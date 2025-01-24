@@ -107,9 +107,8 @@ const BalanceTransfer = ({navigation}) => {
     setIsLoading(true);
     try {
       const response = await apiClient.post('/wallets/transfer', payload);
-  
-      console.log(response.data);
-      Alert.alert('Success', response.data.message);
+ 
+      Alert.alert('Success', response.data.message); 
       setTransactionAmount('');
       setSelectedDate(new Date());
       setFromWallet(null);
