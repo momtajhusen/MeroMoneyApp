@@ -98,9 +98,9 @@ const StackNavigation = () => {
           headerTitle: () => <HeaderTitle />,
         }} />
       <Stack.Screen name="BottomNavigator" component={BottomNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="AddTransaction" component={AddTransaction} options={{ title: 'Add Transaction'  }} />
-      <Stack.Screen name="Wallet" component={Wallet} options={{ title: 'My Wallets' }} />
-      <Stack.Screen name="SelectWallet" component={SelectWallet} options={{ title: 'Select Wallet' }} />
+      <Stack.Screen name="AddTransaction" component={AddTransaction} options={{ title: 'Add Transaction', animation: 'fade' }} />
+      <Stack.Screen name="Wallet" component={Wallet} options={{ title: 'My Wallets', animation: 'slide_from_right'}} />
+      <Stack.Screen name="SelectWallet" component={SelectWallet} options={{ title: 'Select Wallet'  }} />
       <Stack.Screen name="AddWallets" component={AddWallets} options={{ title: 'Add Wallets' }} />
       <Stack.Screen name="EditWallet" component={EditWallet} options={{ title: 'Edit Wallet' }} />
       <Stack.Screen name="Currency" component={Currency} options={{ title: 'Select Currency' }} />
@@ -110,7 +110,7 @@ const StackNavigation = () => {
       <Stack.Screen name="DeveloperMode" component={DeveloperMode} options={{ title: 'Developer Mode' }} />
       <Stack.Screen name="IconUpload" component={IconUpload} options={{ title: 'Icon Upload' }} />
       <Stack.Screen name="IconUpdate" component={IconUpdate} options={{ title: 'Icon Update' }} />
-      <Stack.Screen name="AllIcons" component={AllIcons} options={{ title: 'All Icons' }} />
+      <Stack.Screen name="AllIcons" component={AllIcons} options={{ title: 'All Icons', animation: 'slide_from_right' }} />
       <Stack.Screen name="CurrencyUpload" component={CurrencyUpload} options={{ title: 'Currency Upload' }} />
       <Stack.Screen name="SelectItonsTabs" component={SelectItonsTabs} options={{ title: 'Select Icon' }} />
       <Stack.Screen name="ParentExpensiveCategory" component={ParentExpensiveCategory} options={{ title: 'Select Parent Category' }} />
@@ -124,10 +124,6 @@ const StackNavigation = () => {
       <Stack.Screen name="BalanceTransfer" component={BalanceTransfer} options={{ title: 'Balance Transfer' }} />  
       <Stack.Screen name="BalanceAdjustment" component={BalanceAdjustment} options={{ title: 'Balance Adjustment' }} />  
 
-
-      
-
-      
     </Stack.Navigator>
   );
 };

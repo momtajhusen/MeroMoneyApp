@@ -76,12 +76,18 @@ const CategoryScreen = ({ type }) => {
     }
   };
 
-
-  const categoryPress = (parentCategoryId, categoryId, parentCategoryName, categoryName, categoryImage, iconId, userRole) => {
-    // Dispatch both categoryId and categoryName in a single action
-    dispatch({ type: 'SET_CATEGORY', payload: { categoryId, categoryName, categoryImage } });
-    dispatch({ type: 'SET_CATEGORY_SELECT_TYPE', payload: 'Expense' });
-
+  const categoryPress = (parentCategoryId, categoryId, parentCategoryName, categoryName, categoryImage, iconId, userRole, categoryType) => {
+    // Dispatch category selection
+    dispatch({ 
+      type: 'SET_CATEGORY', 
+      payload: { categoryId, categoryName, categoryImage } 
+    });
+  
+    // Dispatch category type (Expense or Income)
+    if (categoryType === 'Expense' || categoryType === 'Income') {
+      dispatch({ type: 'SET_CATEGORY_SELECT_TYPE', payload: categoryType });
+    }
+  
     // If categoryBackNavigation exists, navigate to the respective screen
     if (state.categoryBackNavigation != null) {
       navigation.navigate(state.categoryBackNavigation);
@@ -155,7 +161,8 @@ const CategoryScreen = ({ type }) => {
             parentCategory.name,
             BASE_URL + parentCategory.icon_path,
             parentCategory.icon_id,
-            parentCategory.user_role
+            parentCategory.user_role,
+            parentCategory.type // ✅ अब category type भी pass किया गया
           )
         }
       >
@@ -174,7 +181,8 @@ const CategoryScreen = ({ type }) => {
               childCategory.name,
               BASE_URL + childCategory.icon_path,
               childCategory.icon_id,
-              childCategory.user_role
+              childCategory.user_role,
+              childCategory.type // ✅ अब category type भी pass किया गया
             )
           }
         >

@@ -56,26 +56,28 @@ const AddTransaction = () => {
     const amount = transactionAmount;
     const note = state.transactionNote;
     const transaction_date = selectedDate;
-
-
+  
     // Sequential validation with shake animations
     if (!amount || isNaN(amount)) {
       shakeAnimation(amountShake);
       return;
     }
-
+  
     if (!category_id) {
       shakeAnimation(categoryShake);
       return;
     }
-
+  
     if (!wallet_id) {
       shakeAnimation(walletShake);
       return;
     }
-
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
+  
+    let userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (userTimezone === "Asia/Calcutta") {
+      userTimezone = "Asia/Kolkata"; // ✅ Corrected timezone
+    }
+  
     const payload = {
       user_id,
       wallet_id,
@@ -85,37 +87,38 @@ const AddTransaction = () => {
       transaction_date,
       attachment_url: null,
       exchange_rate_to_base: null,
-      timezone: userTimezone, 
+      timezone: userTimezone, // ✅ Ensured valid timezone
     };
-
+  
+    console.log(payload);
+  
     try {
       setIsLoading(true);
       const response = await apiClient.post('/transactions', payload);
-
+  
       console.log(response.data);
-
+  
       if (response.status === 201) {
-
         // Handle success response
         setAlertMessage('Transaction saved successfully.');
         setAlertType('success');
         setAlertVisible(true);
-
+  
         setTransactionAmount(null);
         dispatch({ type: 'SET_CATEGORY', payload: { categoryId: null, categoryName: null, categoryImage: null } });
         dispatch({ type: 'TRANSCTION_NOTE', payload: null });
-        // dispatch({ type: 'SET_WALLET', payload: { walletId: null, walletName: null } });
         dispatch({ type: 'GLOBAL_REFRESH', payload: Math.random() });
         setTimeout(() => {
           setAlertVisible(false);
         }, 2000);
-
+  
       } else {
         setAlertMessage('Failed to save the transaction.');
         setAlertType('error');
         setAlertVisible(true);
       }
     } catch (error) {
+      console.log(error.response);
       setAlertMessage(error.response?.data?.error || error.message);
       setAlertType('error');
       setAlertVisible(true);
@@ -123,6 +126,7 @@ const AddTransaction = () => {
       setIsLoading(false);
     }
   };
+  
 
   return (
     <View style={[styles.container, { backgroundColor: theme.primary }]}>
